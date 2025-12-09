@@ -1,0 +1,70 @@
+# ==============================================================
+# CONFIGURACIÓN BASE (Común para ambos modos)
+# ==============================================================
+spring:
+  application:
+    name: vmsys
+
+vmsys:
+  precio-compra:
+    estrategia: ULTIMA_COMPRA  # Opciones: ULTIMA_COMPRA | PROMEDIO_PROVEEDORES | MAS_FRECUENTE
+  
+  # IMPORTANTE: Dejamos esto comentado. 
+  # Tu clase AutoProfileEnvironmentPostProcessor decidirá qué perfil activar al arrancar.
+  # profiles:
+  #   active: online 
+
+  jpa:
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      # 'validate' verifica que la BD coincida con tus Entidades, pero NO crea tablas.
+      # De la creación de tablas se encarga Flyway.
+      ddl-auto: validate 
+    properties:
+      hibernate:
+        '[format_sql]': true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    # Esto permite crear la tabla de historial de Flyway si la BD es nueva (típico en H2)
+    baseline-on-migrate: true 
+
+# ==============================================================
+# PERFIL 1: ONLINE (Principal - PostgreSQL Remoto)
+# ==============================================================
+---
+spring:
+  config:
+    activate:
+      on-profile: online
+  
+  datasource:
+    # Ajusta aquí la IP, puerto y nombre de tu base de datos real
+    url: jdbc:postgresql://localhost:5432/mvm_db_prod
+    username: postgres
+    password: tu_password_remoto
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+# ==============================================================
+# PERFIL 2: OFFLINE (Contingencia - H2 en Disco Local)
+# ==============================================================
+---
+spring:
+  config:
+    activate:
+      on-profile: offline
+  
+  datasource:
+    # Esto guardará la BD en una carpeta 'data' dentro de tu proyecto
+    url: jdbc:h2:file:./data/offline_db;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE
+    username: sa
+    password: password
+    driver-class-name: org.h2.Driver
+  
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect

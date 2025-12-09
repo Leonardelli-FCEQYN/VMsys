@@ -1,0 +1,3091 @@
+# DOCUMENTO CONSOLIDADO DE REQUISITOS DEL SISTEMA
+## VMsys - Sistema de Gestión de Manufactura y Ventas
+
+**Versión:** 1.1  
+**Fecha:** 05/12/2025  
+**Estado:** Aprobado para Implementación
+
+---
+
+## ⚠️ ALCANCE IMPORTANTE
+
+**El sistema VMsys NO incluye:**
+- ❌ Facturación electrónica o fiscal (AFIP)
+- ❌ Integración con sistemas contables externos
+- ❌ Emisión de comprobantes fiscales
+- ❌ Integración con otros sistemas de terceros
+
+**El sistema SÍ incluye:**
+- ✅ Comprobantes internos de control (no fiscales)
+- ✅ Exportación de datos para análisis (Excel, CSV)
+- ✅ Gestión completa de operaciones internas
+- ✅ Trazabilidad y auditoría de todas las operaciones
+
+---
+
+## TABLA DE CONTENIDOS
+1. [Objetivos del Sistema](#objetivos-del-sistema)
+2. [Requisitos de Información (IRQ)](#requisitos-de-información-irq)
+3. [Requisitos Funcionales (RF)](#requisitos-funcionales-rf)
+4. [Casos de Uso (UC)](#casos-de-uso-uc)
+5. [Actores del Sistema](#actores-del-sistema)
+6. [Requisitos No Funcionales (NFR)](#requisitos-no-funcionales-nfr)
+7. [Glosario de Términos](#glosario-de-términos)
+
+---
+
+## OBJETIVOS DEL SISTEMA
+
+### OBJ-01: Disminuir pérdidas de insumos no justificadas
+- **Descripción:** Gestionar movimientos de stock en tiempo real, controlar trazabilidad mediante lotes y ubicaciones, generar reportes de diferencias y ajustes.
+- **Estabilidad:** Alta
+
+### OBJ-02: Mejorar la trazabilidad de productos desde materias primas hasta la venta
+- **Descripción:** Registrar productos/insumos, definir procesos productivos, controlar órdenes de producción, vincular historial completo.
+- **Estabilidad:** Alta
+
+### OBJ-03: Optimizar la gestión de abastecimiento
+- **Descripción:** Gestionar proveedores, registrar compras, evaluar condiciones comerciales, generar órdenes según necesidades.
+- **Estabilidad:** Alta
+
+### OBJ-04: Aumentar la eficiencia de la planificación y control de la producción
+- **Descripción:** Definir procesos estandarizados, planificar órdenes, controlar ejecución, generar reportes de eficiencia.
+- **Estabilidad:** Alta
+
+### OBJ-05: Reducir riesgos financieros por falta de control de cuentas corrientes
+- **Descripción:** Gestionar clientes, registrar pedidos/ventas, administrar cuentas corrientes, registrar y controlar pagos.
+- **Estabilidad:** Alta
+
+### OBJ-06: Mejorar el control y transparencia de servicios tercerizados
+- **Descripción:** Gestionar servicios tercerizados, evaluar desempeños, automatizar asignación.
+- **Estabilidad:** Alta
+
+### OBJ-07: Potenciar la toma de decisiones mediante reportes estratégicos
+- **Descripción:** Generar reportes personalizables, proveer KPIs, indicadores de rentabilidad.
+- **Estabilidad:** Alta
+
+### OBJ-08: Garantizar seguridad, control y trazabilidad de operaciones
+- **Descripción:** Gestionar usuarios/roles/permisos, auditar operaciones, configurar políticas de seguridad.
+- **Estabilidad:** Alta
+
+### OBJ-09: Facilitar configuración y adaptación del sistema a distintas PYMEs
+- **Descripción:** Configurar parámetros globales, adaptar zonas de trabajo, permitir modificaciones sin afectar estructura.
+- **Estabilidad:** Alta
+
+### OBJ-10: Asegurar adopción efectiva por usuarios
+- **Descripción:** Proveer interfaz intuitiva, reducir capacitación técnica, diseñar operaciones frecuentes visibles.
+- **Estabilidad:** Alta
+
+### OBJ-11: Cumplir con requisitos técnicos y normativos
+- **Descripción:** Asegurar disponibilidad, rendimiento, robustez, cumplir protección de datos.
+- **Estabilidad:** Alta
+
+---
+
+## REQUISITOS DE INFORMACIÓN (IRQ)
+
+### IRQ-01: Información de Productos
+**Objetivos:** OBJ-02  
+**Datos Específicos:**
+- ID de producto (código único)
+- Nombre, Descripción, Categoría
+- Unidad de medida
+- Estado (activo/inactivo)
+- Fecha de alta
+- Costo de compra/reposición
+- Precio de venta
+- Margen de ganancia sugerido
+
+### IRQ-02: Información de Procesos Productivos
+**Objetivos:** OBJ-02, OBJ-04  
+**Datos Específicos:**
+- ID de proceso productivo
+- Nombre, Descripción
+- Tiempo total estimado
+- Producto final asociado
+- Lista de insumos previstos
+- **Etapas del proceso:**
+  - ID de etapa, Nombre, Orden/secuencia
+  - Insumos específicos, Producto/resultado esperado
+  - Tiempo estimado de la etapa
+
+### IRQ-03: Información de Órdenes de Producción
+**Objetivos:** OBJ-02, OBJ-04  
+**Datos Específicos:**
+- ID de orden de producción
+- Proceso productivo asociado
+- Fecha emisión, inicio/fin prevista y real
+- Estado (planificada, en ejecución, finalizada, cancelada)
+- Usuario responsable
+- **Resultados de ejecución:**
+  - Etapa: fecha/hora inicio-fin, responsable, insumos consumidos
+  - Cantidad total producida, conforme, defectuosa
+  - Merma, Reutilizable
+
+### IRQ-04: Información de Proveedores
+**Objetivos:** OBJ-03  
+**Datos Específicos:**
+- Razón social/Nombre
+- CUIT/CUIL/DNI
+- Dirección, Teléfono, Correo electrónico
+- Rubro/categoría
+- Condiciones comerciales (plazo de pago, bonificaciones, intereses)
+- Estado (activo/inactivo)
+
+### IRQ-05: Información de Compras
+**Objetivos:** OBJ-03  
+**Datos Específicos:**
+- ID de orden de compra
+- Proveedor asociado
+- Productos solicitados (cantidad, precios)
+- Fecha emisión, recepción prevista/real
+- Estado (pendiente, en curso, recibida, cancelada)
+- **Recepción:**
+  - Cantidad recibida, Estado (completa/parcial/rechazada)
+  - Observaciones, Lotes/Series
+- **Datos financieros:**
+  - Condiciones de pago, Monto total
+  - Bonificaciones/descuentos
+  - Pagos realizados (monto, fecha, método)
+  - Saldo pendiente
+
+### IRQ-06: Información de Clientes
+**Objetivos:** OBJ-05  
+**Datos Específicos:**
+- Nombre y apellido/Razón social
+- CUIT/CUIL/DNI
+- Dirección, Teléfono, Correo electrónico
+- Categoría (mayorista, minorista, eventual, frecuente)
+- Condiciones comerciales
+- Límite de crédito autorizado
+- Estado (activo, inactivo, suspendido)
+- Fecha de alta
+
+### IRQ-07: Información de Pedidos
+**Objetivos:** OBJ-05  
+**Datos Específicos:**
+- ID de pedido
+- Cliente asociado
+- Fecha de emisión
+- **Detalle por ítem:**
+  - Producto, Cantidad, Precio unitario acordado
+  - Observaciones
+- Modalidad de entrega (con envío/sin envío)
+- Fecha/hora prevista de entrega o retiro
+- Seña/anticipo
+- Estado (pendiente, confirmado, en proceso, listo para entrega, cancelado)
+- **Órdenes derivadas:**
+  - Órdenes de producción generadas
+  - Órdenes de compra generadas
+
+### IRQ-08: Información de Ventas
+**Objetivos:** OBJ-05  
+**Datos Específicos:**
+- ID de venta
+- Pedido asociado
+- Cliente asociado
+- Fecha de la venta
+- **Detalle económico:**
+  - Producto, Cantidad, Precio unitario
+  - Subtotal por ítem
+- Descuentos aplicados
+- Importe total
+- **Condiciones de pago:**
+  - Modalidad (contado, crédito, seña + saldo)
+  - Medio de pago (efectivo, transferencia, tarjeta)
+  - Comprobante emitido
+- Estado (abierta, cerrada, anulada)
+
+### IRQ-09: Información de Stock
+**Objetivos:** OBJ-01, OBJ-02  
+**Datos Específicos:**
+- ID de movimiento de stock
+- Producto en stock
+- Tipo de movimiento (ingreso, egreso, ajuste, transferencia)
+- Cantidad del movimiento
+- Fecha y hora
+- Motivo (compra, venta, producción, merma, inventario, ajuste)
+- Usuario responsable
+- Ubicación de almacenamiento
+- Número de lote o serie (si aplica)
+
+### IRQ-10: Información de Cuentas Corrientes
+**Objetivos:** OBJ-05  
+**Datos Específicos:**
+- ID de cuenta corriente
+- Cliente/Proveedor asociado
+- Saldo inicial/actual
+- Límite de crédito autorizado
+- Plazo de pago pactado
+- Estado (activa, bloqueada)
+- **Movimientos:**
+  - Tipo (venta, compra, pago, ajuste)
+  - Fecha, Detalle, Monto
+  - Usuario que registró
+- **Pagos:**
+  - Fecha, Importe abonado
+  - Medio de pago
+  - Comprobante asociado
+
+### IRQ-11: Información de Servicios Tercerizados
+**Objetivos:** OBJ-06  
+**Datos Específicos:**
+- ID de Servicio
+- Nombre, Descripción
+- Costo unitario pactado
+- Unidad de medida (hora, km, unidad)
+- Proveedor asociado
+
+### IRQ-12: Información de Usuarios, Roles y Permisos
+**Objetivos:** OBJ-08  
+**Datos Específicos:**
+- **Usuario:**
+  - ID, Nombre y Apellido
+  - Correo electrónico
+  - Credenciales (hash seguro)
+- **Rol:**
+  - ID, Nombre
+  - Lista de Permisos
+- **Permisos:** Granulares por funcionalidad/RF
+
+### IRQ-13: Información de Configuración General y Políticas
+**Objetivos:** OBJ-09  
+**Datos Específicos:**
+- ID de Parámetro
+- Nombre, Valor (numérico/texto)
+- Descripción
+- Políticas de Seguridad
+- Adaptaciones de Zonas (Depósitos, Líneas de producción)
+
+### IRQ-14: Información de Auditoría y Trazabilidad
+**Objetivos:** OBJ-08  
+**Datos Específicos:**
+- ID de Evento (timestamp/código único)
+- Fecha y Hora
+- Tipo de Acción (Alta, Modificación, Baja, Consulta)
+- Usuario Responsable
+- Módulo/Entidad Afectada
+- Detalle del Cambio (datos antes/después)
+
+### IRQ-15: Información de Indicadores Clave (KPIs)
+**Objetivos:** OBJ-07  
+**Datos Específicos:**
+- Nombre del Indicador
+- Fórmula de cálculo
+- Frecuencia de medición
+- Meta/Valor objetivo
+
+---
+
+## REQUISITOS FUNCIONALES (RF)
+
+### GESTIÓN DE STOCK
+- **RF-01:** Registrar movimientos de stock (ingresos, egresos, ajustes, transferencias)
+- **RF-02:** Consultar estado del stock (cantidad, ubicación, lote, vencimiento)
+- **RF-03:** Generar reportes de diferencias y ajustes de stock
+- **RF-22:** Gestionar inventarios periódicos
+
+### GESTIÓN DE PRODUCTOS
+- **RF-04:** Gestionar productos (registrar, modificar, consultar, anular)
+- **RF-08:** Consultar historial completo de productos
+
+### GESTIÓN DE PROCESOS PRODUCTIVOS
+- **RF-05:** Gestionar procesos productivos estandarizados
+- **RF-06:** Gestionar órdenes de producción (crear, planificar, modificar, cerrar, cancelar)
+- **RF-07:** Registrar resultados de producción (cantidades conformes, defectuosas, mermas)
+- **RF-14:** Registrar tiempos reales y responsables por etapa
+- **RF-15:** Generar reportes de eficiencia productiva
+- **RF-23:** Generar órdenes derivadas de pedidos según disponibilidad
+
+### GESTIÓN DE PROVEEDORES
+- **RF-09:** Gestionar proveedores (registrar, modificar, consultar, anular)
+- **RF-12:** Consultar condiciones comerciales de proveedores
+- **RF-13:** Emitir reportes de desempeño de proveedores
+
+### GESTIÓN DE COMPRAS
+- **RF-10:** Gestionar compras (registrar, modificar, consultar, anular órdenes)
+- **RF-11:** Registrar recepción de compras con impacto en stock
+
+### GESTIÓN DE CLIENTES
+- **RF-16:** Gestionar clientes (registrar, modificar, consultar, anular)
+
+### GESTIÓN DE PEDIDOS Y VENTAS
+- **RF-17:** Gestionar pedidos (registrar, modificar, consultar, cancelar)
+- **RF-18:** Gestionar ventas (registrar, modificar, consultar, anular)
+- **RF-20:** Registrar pagos (clientes y proveedores)
+
+### GESTIÓN DE CUENTAS CORRIENTES
+- **RF-19:** Gestionar cuentas corrientes
+- **RF-21:** Consultar estado de cuentas corrientes
+
+### GESTIÓN DE SERVICIOS TERCERIZADOS
+- **RF-24:** Gestionar Servicios Tercerizados
+- **RF-25:** Consultar Condiciones y Costos de Servicios
+- **RF-26:** Asignar Servicios a Procesos Productivos
+- **RF-27:** Registrar Gasto de Servicio en Orden de Producción
+
+### GESTIÓN DE SEGURIDAD Y USUARIOS
+- **RF-28:** Gestionar Usuarios
+- **RF-29:** Gestionar Roles y Permisos
+- **RF-30:** Autenticación y Control de Acceso
+- **RF-31:** Registro Automático de Trazabilidad
+- **RF-32:** Consultar Historial de Auditoría
+
+### GESTIÓN DE CONFIGURACIÓN
+- **RF-33:** Gestionar Configuración de Parámetros Globales
+- **RF-34:** Gestionar Adaptaciones de Zonas de Trabajo
+- **RF-35:** Restaurar Configuración Predeterminada
+
+### REPORTES Y DASHBOARDS
+- **RF-36:** Generar Tablero de Control (Dashboard)
+- **RF-37:** Exportar Reportes Gerenciales
+
+### AYUDA Y DOCUMENTACIÓN
+- **RF-38:** Acceder a Ayuda Contextual
+
+---
+
+## CASOS DE USO (UC) - ESPECIFICACIÓN EXTENDIDA
+
+---
+
+### MÓDULO PROVEEDORES
+
+#### **UC-01: Buscar proveedor**
+
+**Actor Principal:** Administrador General, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Al menos un proveedor registrado en la base de datos
+- Permiso de lectura en módulo de Proveedores (RF-29)
+
+**Flujo Principal:**
+1. Usuario accede al módulo de Proveedores desde el menú principal
+2. Sistema presenta pantalla de búsqueda con filtros disponibles
+3. Usuario ingresa criterios de búsqueda (nombre, código, CUIT, estado)
+4. Usuario hace clic en botón "Buscar"
+5. Sistema valida que al menos un criterio esté completo
+6. Sistema ejecuta consulta en base de datos
+7. Sistema muestra tabla con resultados paginados (máximo 50 registros por página)
+8. Usuario puede seleccionar un proveedor para ver más detalles o editar
+
+**Flujos Alternativos:**
+- A1: Si no hay resultados, sistema muestra mensaje "No se encontraron proveedores" y sugiere limpiar filtros
+- A2: Si búsqueda retorna más de 500 registros, sistema limita a primeros 500 y advierte al usuario
+- A3: Usuario puede exportar resultados a Excel (RF-37)
+
+**Consideraciones Técnicas:**
+- Campo de búsqueda debe permitir caracteres especiales (guiones, puntos en CUIT)
+- Búsqueda debe ser case-insensitive
+- Implementar índices en columnas de búsqueda frecuente (nombre, código)
+- Registrar búsqueda en auditoría solo si modifica datos (no si solo consulta)
+
+**Datos Involucrados:** IRQ-04 (Información de Proveedores)
+
+**Requisitos Funcionales:** RF-09
+
+---
+
+#### **UC-02: Registrar proveedor**
+
+**Actor Principal:** Administrador General, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Permiso de creación en módulo de Proveedores (RF-29)
+- CUIT del proveedor no existe en el sistema
+
+**Flujo Principal:**
+1. Usuario accede a opción "Nuevo Proveedor" desde módulo de Proveedores
+2. Sistema abre formulario vacío con todos los campos de IRQ-04
+3. Usuario completa campos obligatorios:
+   - Nombre completo/Razón social
+   - CUIT (validar formato y duplicados)
+   - Correo electrónico (validar formato)
+   - Teléfono
+   - Dirección
+   - Ciudad/Localidad
+   - Condiciones de pago (plazo estándar, descuentos)
+4. Usuario completa campos opcionales (notas, contacto secundario)
+5. Usuario hace clic en "Guardar"
+6. Sistema valida todos los campos:
+   - Campos obligatorios completados
+   - Formato válido para email y CUIT
+   - CUIT único (no existe otro proveedor)
+7. Si validación es correcta:
+   - Sistema crea registro en tabla PROVEEDORES
+   - Sistema asigna ID único
+   - Sistema genera registro de auditoría (RF-31)
+   - Sistema muestra mensaje "Proveedor registrado exitosamente"
+   - Sistema retorna a lista de proveedores con nuevo registro visible
+8. Si validación falla, sistema muestra errores específicos en cada campo
+
+**Flujos Alternativos:**
+- A1: Usuario cancela antes de guardar - retorna a lista sin cambios
+- A2: CUIT duplicado - sistema advierte y sugiere buscar proveedor existente
+- A3: Error de conexión durante guardado - sistema reintenta 3 veces y notifica al usuario
+
+**Consideraciones Técnicas:**
+- CUIT validar con algoritmo de dígito verificador (Argentino)
+- Email validar contra patrón RFC 5322 simplificado
+- Teléfono permitir formatos con/sin caracteres especiales
+- Guardar timestamp de creación (fecha/hora/usuario)
+- Implementar transacción para asegurar atomicidad
+
+**Datos Involucrados:** IRQ-04
+
+**Requisitos Funcionales:** RF-09
+
+---
+
+#### **UC-03: Modificar proveedor**
+
+**Actor Principal:** Administrador General, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Proveedor seleccionado existe en base de datos
+- Permiso de edición en módulo de Proveedores (RF-29)
+- Proveedor no tiene estado "Bloqueado" (debe poder desbloquearse primero)
+
+**Flujo Principal:**
+1. Usuario selecciona proveedor desde lista (UC-01)
+2. Usuario hace clic en botón "Editar" o ícono de edición
+3. Sistema carga formulario con datos actuales del proveedor
+4. Usuario modifica uno o más campos permitidos
+5. Usuario hace clic en "Guardar Cambios"
+6. Sistema valida cambios:
+   - Si se modificó CUIT: validar que nuevo CUIT no esté duplicado
+   - Si se modificó email: validar formato
+   - Validar campos obligatorios aún completos
+7. Si validación correcta:
+   - Sistema registra valores anteriores (para auditoría)
+   - Sistema actualiza registro
+   - Sistema genera entrada de auditoría con cambios: antes/después (RF-31)
+   - Sistema muestra "Cambios guardados exitosamente"
+8. Si validación falla, muestra errores sin guardar
+
+**Flujos Alternativos:**
+- A1: Usuario presiona "Cancelar" - descarta cambios
+- A2: Otro usuario modificó el mismo registro mientras usuario estaba editando:
+  - Sistema advierte "Este registro fue modificado. ¿Desea recargar?"
+  - Si "Sí": recarga datos y pierde cambios locales
+  - Si "No": permite intentar guardar (implementar merge inteligente o sobrescribir)
+
+**Consideraciones Técnicas:**
+- Implementar optimistic locking con timestamp/versión
+- Auditar TODOS los campos que cambian (no solo algunos)
+- Mantener historial de cambios (puede querrerse ver quién cambió qué y cuándo)
+- Si CUIT cambia, validar que no afecte órdenes de compra pendientes
+- Considerar si cambiar CUIT debe invalidar relaciones existentes
+
+**Datos Involucrados:** IRQ-04
+
+**Requisitos Funcionales:** RF-09, RF-31 (auditoría)
+
+---
+
+#### **UC-04: Cambiar estado proveedor**
+
+**Actor Principal:** Administrador General
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Proveedor seleccionado existe
+- Permiso de cambio de estado en módulo de Proveedores (RF-29)
+
+**Flujo Principal:**
+1. Usuario selecciona proveedor desde lista (UC-01)
+2. Usuario hace clic en botón "Cambiar Estado" o selecciona desde menú contextual
+3. Sistema presenta diálogo con opciones:
+   - Estado actual: [Activo/Bloqueado]
+   - Nuevo estado: [Activo/Bloqueado]
+   - Motivo de cambio (campo de texto, obligatorio)
+4. Usuario selecciona nuevo estado e ingresa motivo
+5. Usuario confirma cambio
+6. Sistema valida:
+   - Si bloqueando: verificar que no hay órdenes de compra pendientes sin recepcionar
+   - Si activando: no hay validaciones adicionales
+7. Si validación correcta:
+   - Sistema cambia estado
+   - Sistema registra auditoría: usuario, timestamp, motivo, cambio de/a (RF-31)
+   - Sistema muestra confirmación
+8. Si validación falla, muestra advertencia y no permite cambio
+
+**Flujos Alternativos:**
+- A1: Usuario intenta bloquear proveedor con compras pendientes:
+  - Sistema muestra lista de órdenes pendientes
+  - Usuario decide: bloquear de todas formas / cancelar operación / marcar compras como canceladas primero
+
+**Consideraciones Técnicas:**
+- Impacto en módulo de Compras: si está bloqueado, no debería permitirse crear nuevas órdenes
+- Campo "Motivo" es importante para auditoría y decisiones futuras
+- Registrar estado anterior y nuevo
+- Considerar "soft delete" vs cambio de estado (usamos cambio de estado)
+
+**Datos Involucrados:** IRQ-04 (campo Estado)
+
+**Requisitos Funcionales:** RF-09, RF-31
+
+---
+
+---
+
+### MÓDULO CLIENTES
+
+#### **UC-05: Buscar cliente**
+
+**Actor Principal:** Administrador General, Asistente Administrativo, Vendedor
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Al menos un cliente registrado en la base de datos
+- Permiso de lectura en módulo de Clientes (RF-29)
+
+**Flujo Principal:**
+1. Usuario accede al módulo de Clientes desde el menú principal
+2. Sistema presenta pantalla de búsqueda con filtros disponibles
+3. Usuario ingresa criterios de búsqueda (nombre, razón social, CUIT, email, estado)
+4. Usuario hace clic en botón "Buscar"
+5. Sistema valida que al menos un criterio esté completo
+6. Sistema ejecuta consulta en base de datos
+7. Sistema muestra tabla con resultados paginados (máximo 50 registros por página)
+8. Usuario puede seleccionar un cliente para ver más detalles, editar o consultar cuenta corriente
+
+**Flujos Alternativos:**
+- A1: Si no hay resultados, sistema muestra mensaje "No se encontraron clientes"
+- A2: Si búsqueda retorna más de 500 registros, limita a primeros 500
+- A3: Usuario puede filtrar por estado (activo, bloqueado, moroso)
+- A4: Usuario puede exportar resultados a Excel
+
+**Consideraciones Técnicas:**
+- Búsqueda case-insensitive
+- Soportar búsqueda por CUIT incompleto (ej: "20*" devuelve todos CUIT que comienzan con 20)
+- Implementar índices en columnas de búsqueda frecuente
+- Mostrar indicador visual si cliente está en mora (saldo vencido)
+- No registrar búsquedas en auditoría (solo operaciones de modificación)
+
+**Datos Involucrados:** IRQ-06 (Información de Clientes)
+
+**Requisitos Funcionales:** RF-16
+
+---
+
+#### **UC-06: Registrar cliente**
+
+**Actor Principal:** Administrador General, Asistente Administrativo, Vendedor
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Permiso de creación en módulo de Clientes (RF-29)
+- CUIT del cliente no existe en el sistema
+
+**Flujo Principal:**
+1. Usuario accede a opción "Nuevo Cliente" desde módulo de Clientes
+2. Sistema abre formulario vacío con campos de IRQ-06
+3. Usuario completa campos obligatorios:
+   - Nombre o Razón Social
+   - CUIT (validar formato y duplicados)
+   - Correo electrónico
+   - Teléfono de contacto
+   - Dirección de envío
+   - Localidad/Ciudad
+   - Condición de venta (contado/crédito)
+   - Si es crédito: límite de crédito, plazo de pago
+4. Usuario completa campos opcionales (contacto secundario, nota especial)
+5. Usuario hace clic en "Guardar"
+6. Sistema valida:
+   - Campos obligatorios completos
+   - Formato válido CUIT, email, teléfono
+   - CUIT único (no existe otro cliente)
+   - Si condición es crédito: límite mayor a 0
+7. Si validación correcta:
+   - Sistema crea registro en tabla CLIENTES
+   - Sistema crea registro de CUENTAS_CORRIENTES asociada (IRQ-10)
+   - Sistema asigna saldo inicial = 0
+   - Sistema genera registro de auditoría
+   - Sistema muestra "Cliente registrado exitosamente"
+   - Sistema retorna a lista con nuevo cliente visible
+8. Si validación falla, muestra errores específicos
+
+**Flujos Alternativos:**
+- A1: Usuario cancela - retorna a lista sin cambios
+- A2: CUIT duplicado - advierte y sugiere buscar cliente existente
+- A3: Límite de crédito = 0 y condición es crédito - advierte sobre inconsistencia
+- A4: Error de conexión - reintenta 3 veces
+
+**Consideraciones Técnicas:**
+- CUIT validar con algoritmo de dígito verificador (Argentino)
+- Email validar contra patrón RFC 5322
+- Al crear cliente, SIEMPRE crear CUENTA_CORRIENTE asociada
+- Timestamp de creación automático (fecha/hora/usuario)
+- Implementar transacción atómica (cliente + cuenta corriente)
+- Condición de venta puede cambiar después (UC-07)
+
+**Datos Involucrados:** IRQ-06 (Clientes), IRQ-10 (Cuentas Corrientes)
+
+**Requisitos Funcionales:** RF-16, RF-19 (crear cuenta corriente automática)
+
+---
+
+#### **UC-07: Modificar cliente**
+
+**Actor Principal:** Administrador General, Asistente Administrativo, Vendedor
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Cliente seleccionado existe en base de datos
+- Permiso de edición en módulo de Clientes (RF-29)
+
+**Flujo Principal:**
+1. Usuario selecciona cliente desde lista (UC-05)
+2. Usuario hace clic en botón "Editar"
+3. Sistema carga formulario con datos actuales del cliente
+4. Usuario modifica uno o más campos permitidos
+5. Usuario hace clic en "Guardar Cambios"
+6. Sistema valida cambios:
+   - Si se modificó CUIT: validar que nuevo CUIT no esté duplicado
+   - Si se modificó email: validar formato
+   - Campos obligatorios aún completos
+   - Si se cambió límite de crédito: validar que sea mayor al saldo deudor actual
+7. Si validación correcta:
+   - Sistema registra valores anteriores
+   - Sistema actualiza registro CLIENTES
+   - Sistema genera entrada de auditoría con cambios antes/después
+   - Si se cambió plazo de pago: actualizar también en CUENTAS_CORRIENTES
+   - Sistema muestra "Cambios guardados exitosamente"
+8. Si validación falla, muestra errores sin guardar
+
+**Flujos Alternativos:**
+- A1: Usuario presiona "Cancelar" - descarta cambios
+- A2: Se intenta disminuir límite de crédito por debajo del saldo deudor:
+  - Sistema advierte: "Saldo deudor actual es $X. Límite mínimo es $X"
+  - No permite disminuir más
+- A3: Concurrencia: otro usuario modificó el registro mientras se estaba editando
+  - Sistema advierte "Este registro fue modificado. ¿Desea recargar?"
+
+**Consideraciones Técnicas:**
+- Optimistic locking con timestamp/versión
+- Auditar TODOS los cambios
+- Si cambia email: considerar si hay notificaciones pendientes (no implementar aún)
+- Si cambia dirección: validar impacto en pedidos abiertos (informar al usuario)
+- Permitir cambio de condición venta (contado → crédito o viceversa)
+
+**Datos Involucrados:** IRQ-06
+
+**Requisitos Funcionales:** RF-16, RF-31 (auditoría)
+
+---
+
+#### **UC-08: Anular/habilitar cliente**
+
+**Actor Principal:** Administrador General
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Cliente seleccionado existe en base de datos
+- Permiso de cambio de estado en módulo de Clientes (RF-29)
+
+**Flujo Principal:**
+1. Usuario selecciona cliente desde lista (UC-05)
+2. Usuario hace clic en botón "Cambiar Estado"
+3. Sistema presenta diálogo con opciones:
+   - Estado actual: [Activo/Anulado]
+   - Nuevo estado: [Activo/Anulado]
+   - Motivo de cambio (campo de texto, obligatorio)
+4. Usuario selecciona nuevo estado e ingresa motivo
+5. Usuario confirma cambio
+6. Sistema valida:
+   - Si anulando: verificar que NO hay pedidos/ventas pendientes sin cerrar
+   - Si anulando y hay cuenta corriente con saldo deudor: advertir pero permitir (marcar cuenta como cerrada)
+   - Si habilitando: no hay validaciones adicionales
+7. Si validación correcta:
+   - Sistema cambia estado CLIENTE
+   - Sistema cambia estado CUENTA_CORRIENTES asociada (si aplica)
+   - Sistema registra auditoría completa
+   - Sistema muestra confirmación
+8. Si validación falla, muestra advertencia
+
+**Flujos Alternativos:**
+- A1: Usuario intenta anular cliente con pedidos pendientes:
+  - Sistema lista los pedidos abiertos
+  - Usuario decide: anular de todas formas / cancelar operación / cerrar pedidos primero
+- A2: Usuario intenta anular cliente con saldo deudor:
+  - Sistema advierte: "Saldo deudor de $X. ¿Desea anular de todas formas?"
+  - Si sí: anula pero marca cuenta corriente como "cerrada"
+  - Usuario debe registrar pago pendiente manualmente
+
+**Consideraciones Técnicas:**
+- Al anular: NO eliminar el registro (soft delete), cambiar estado
+- Mantener historial de movimientos del cliente (pedidos, ventas, pagos) incluso si está anulado
+- Impacto en módulo de Pedidos: si cliente anulado, NO permitir crear nuevos pedidos
+- Registrar quién anuló, cuándo y por qué (auditoría)
+- Si hay saldo deudor: crear tarea/notificación para cobros
+
+**Datos Involucrados:** IRQ-06 (campo Estado), IRQ-10 (Cuentas Corrientes)
+
+**Requisitos Funcionales:** RF-16, RF-19, RF-31
+
+---
+
+### MÓDULO PRODUCTOS
+
+#### **UC-09: Buscar producto**
+
+**Actor Principal:** Administrador General, Asistente Administrativo, Operador de Producción, Vendedor
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Al menos un producto registrado en la base de datos
+- Permiso de lectura en módulo de Productos (RF-29)
+
+**Flujo Principal:**
+1. Usuario accede al módulo de Productos desde el menú principal
+2. Sistema presenta pantalla de búsqueda con filtros disponibles
+3. Usuario ingresa criterios de búsqueda (código, nombre, categoría, estado, marca)
+4. Usuario puede aplicar filtro adicional: "Solo activos" (checkbox)
+5. Usuario hace clic en botón "Buscar"
+6. Sistema valida que al menos un criterio esté completo
+7. Sistema ejecuta consulta en base de datos
+8. Sistema muestra tabla paginada con resultados (máximo 50 por página)
+9. Para cada producto muestra: código, nombre, categoría, unidad de medida, estado, stock actual
+10. Usuario puede seleccionar un producto para ver detalles, editar, ver historial o consultar stock
+
+**Flujos Alternativos:**
+- A1: Si no hay resultados, sistema muestra mensaje "No se encontraron productos"
+- A2: Si búsqueda retorna más de 500 registros, limita a primeros 500
+- A3: Usuario puede exportar resultados a Excel con todas las columnas
+- A4: Usuario puede hacer búsqueda rápida desde cualquier punto escribiendo código de producto
+
+**Consideraciones Técnicas:**
+- Código de producto debe ser único y case-insensitive
+- Categoría debe ser dropdown con opciones predefinidas (IRQ-13, parametrizable)
+- Mostrar stock actual en tiempo real (sin delays)
+- Implementar índices en código, nombre, categoría
+- Si stock está por debajo de cantidad mínima, mostrar indicador visual (ej: fondo rojo)
+- Buscar en nombre y descripción con palabras clave (LIKE)
+
+**Datos Involucrados:** IRQ-01 (Información de Productos), IRQ-09 (Stock)
+
+**Requisitos Funcionales:** RF-04, RF-02
+
+---
+
+#### **UC-10: Registrar producto**
+
+**Actor Principal:** Administrador General, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Permiso de creación en módulo de Productos (RF-29)
+- Código de producto a registrar no existe en el sistema
+
+**Flujo Principal:**
+1. Usuario accede a opción "Nuevo Producto" desde módulo de Productos
+2. Sistema abre formulario con campos de IRQ-01
+3. Usuario completa campos obligatorios:
+   - Código de producto (alfanumérico, único)
+   - Nombre del producto
+   - Descripción breve
+   - Categoría (dropdown parametrizable, IRQ-13)
+   - Unidad de medida (dropdown: unidad, kg, litro, metros, etc.)
+   - Costo de compra/reposición (validar > 0)
+   - Precio de venta sugerido (validar > costo)
+   - Margen de ganancia sugerido (auto-calcula o ingresa manualmente)
+4. Usuario completa campos opcionales:
+   - Marca/Fabricante
+   - Proveedor principal (opcional, para insumos)
+   - Cantidad mínima de stock
+   - Cantidad máxima de stock
+   - Período de reorden sugerido
+   - Notas adicionales
+5. Usuario hace clic en "Guardar"
+6. Sistema valida:
+   - Campos obligatorios completos
+   - Código único (no existe otro producto con ese código)
+   - Formato válido para código (alfanumérico, sin espacios)
+   - Costo > 0
+   - Precio > Costo
+   - Categoría existe (si parametrizable)
+   - Unidad de medida válida
+7. Si validación correcta:
+   - Sistema crea registro en tabla PRODUCTOS
+   - Sistema asigna ID único
+   - Sistema crea registro inicial en STOCK (cantidad = 0, ubicación = "sin asignar")
+   - Sistema genera registro de auditoría
+   - Sistema muestra "Producto registrado exitosamente"
+   - Sistema retorna a lista con nuevo producto visible
+8. Si validación falla, muestra errores específicos en cada campo
+
+**Flujos Alternativos:**
+- A1: Usuario cancela - retorna a lista sin cambios
+- A2: Código duplicado - advierte y sugiere modificar código
+- A3: Precio < Costo - advierte pero permite (para excepciones)
+- A4: Usuario desea crear variantes de producto (talla, color, etc.):
+  - Sistema abre diálogo adicional para crear SKUs
+  - Cada SKU hereda código base + sufijo (ej: PROD-001-XL)
+  - Esta versión no soporta variantes (nota para fase 2)
+
+**Consideraciones Técnicas:**
+- Código: máximo 20 caracteres, sin espacios, permitir guiones y puntos
+- Formato precio: 2 decimales, validar > 0
+- Margen: puede calcularse automático = (precio - costo) / costo * 100
+- Al crear producto: crear registro STOCK con cantidad=0 automáticamente
+- Categoría debe ser parametrizable (no hardcoded) - RF-33
+- Unidad de medida debe ser parametrizable - RF-33
+- Timestamp de creación automático
+
+**Datos Involucrados:** IRQ-01 (Productos), IRQ-09 (Stock inicial), IRQ-13 (Categorías y Unidades parametrizables)
+
+**Requisitos Funcionales:** RF-04, RF-33 (configuración parametrizable)
+
+---
+
+#### **UC-11: Modificar producto**
+
+**Actor Principal:** Administrador General, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Producto seleccionado existe en base de datos
+- Permiso de edición en módulo de Productos (RF-29)
+
+**Flujo Principal:**
+1. Usuario selecciona producto desde lista (UC-09)
+2. Usuario hace clic en botón "Editar"
+3. Sistema carga formulario con datos actuales del producto
+4. Usuario modifica uno o más campos permitidos
+5. Campos editables: nombre, descripción, categoría, unidad de medida, costo, precio, margen, cantidad mínima, cantidad máxima, período reorden, notas
+6. Campos NO editables: código de producto (inmutable por trazabilidad), ID de producto
+7. Usuario hace clic en "Guardar Cambios"
+8. Sistema valida cambios:
+   - Costo > 0
+   - Precio > Costo (si cambió alguno)
+   - Categoría existe
+   - Unidad de medida válida
+9. Si validación correcta:
+   - Sistema registra valores anteriores
+   - Sistema actualiza registro PRODUCTOS
+   - Sistema genera entrada de auditoría con cambios antes/después
+   - Si cambió precio: considerar si afecta pedidos/ventas abiertas (informar usuario)
+   - Sistema muestra "Cambios guardados exitosamente"
+10. Si validación falla, muestra errores sin guardar
+
+**Flujos Alternativos:**
+- A1: Usuario intenta editar código de producto:
+   - Sistema NO permite (muestra mensaje: "Código de producto es inmutable para mantener trazabilidad")
+- A2: Usuario presiona "Cancelar" - descarta cambios
+- A3: Cambio de precio afecta pedidos abiertos:
+   - Sistema advierte: "Hay N pedidos abiertos con este producto. ¿Desea actualizar precios?"
+   - Usuario decide: actualizar en todos / solo en nuevos / no actualizar
+- A4: Concurrencia: otro usuario modificó el registro
+   - Sistema advierte y ofrece recargar
+
+**Consideraciones Técnicas:**
+- Optimistic locking con timestamp/versión
+- Auditar TODOS los cambios (especialmente precio y costo - impacto financiero)
+- Si cambió costo: considerar impacto en órdenes de producción en ejecución (informar)
+- Código de producto NUNCA cambiar (inmutable por trazabilidad y auditoría)
+- Si cambió unidad de medida: validar que no hay stock con esa unidad (advertir)
+- Permitir cambio de precio retroactivamente (quedará registrado en auditoría)
+
+**Datos Involucrados:** IRQ-01
+
+**Requisitos Funcionales:** RF-04, RF-31 (auditoría)
+
+---
+
+#### **UC-12: Anular/habilitar producto**
+
+**Actor Principal:** Administrador General
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Producto seleccionado existe en base de datos
+- Permiso de cambio de estado en módulo de Productos (RF-29)
+
+**Flujo Principal:**
+1. Usuario selecciona producto desde lista (UC-09)
+2. Usuario hace clic en botón "Cambiar Estado"
+3. Sistema presenta diálogo:
+   - Estado actual: [Activo/Anulado]
+   - Nuevo estado: [Activo/Anulado]
+   - Motivo de cambio (campo de texto, obligatorio)
+4. Usuario selecciona nuevo estado e ingresa motivo
+5. Usuario confirma cambio
+6. Sistema valida:
+   - Si anulando: verificar que NO hay:
+     - Órdenes de compra pendientes con este producto
+     - Órdenes de producción en ejecución que usan este producto
+     - Pedidos abiertos que contienen este producto
+   - Si habilitando: no hay validaciones adicionales
+7. Si validación correcta:
+   - Sistema cambia estado PRODUCTO a "Anulado"
+   - Sistema NO cambia el stock (mantiene histórico)
+   - Sistema registra auditoría: usuario, timestamp, motivo, cambio de/a
+   - Sistema muestra confirmación
+8. Si validación falla, muestra lista de documentos que lo impiden
+
+**Flujos Alternativos:**
+- A1: Usuario intenta anular producto con órdenes pendientes:
+   - Sistema lista los documentos abiertos que lo referencian
+   - Usuario decide: anular de todas formas / cancelar / cerrar documentos primero
+   - Si anula de todas formas: los documentos abiertos quedan como están (histórico intacto)
+- A2: Usuario intenta anular producto que es insumo de un proceso productivo:
+   - Sistema advierte: "Este producto es insumo de N procesos. ¿Confirma anulación?"
+   - Si confirma: el proceso sigue existiendo pero no podrán crearse nuevas órdenes
+
+**Consideraciones Técnicas:**
+- Al anular: cambiar estado a "Anulado", NO eliminar el registro (soft delete)
+- Stock histórico se mantiene intacto (necesario para trazabilidad, OBJ-02)
+- Impacto en módulo de Pedidos/Ventas: si producto anulado, NO permitir agregarlo a nuevos documentos
+- Si producto anulado está en documento abierto: permitir ver pero no editar
+- Registrar auditoría completa de quién, cuándo y por qué
+- Considerar si anular es reversible (permitir "Habilitar" nuevamente)
+
+**Consideraciones de Trazabilidad (OBJ-02):**
+- Aunque producto esté anulado, debe quedar constancia en:
+  - Órdenes de compra históricas
+  - Stock histórico (todos los movimientos)
+  - Órdenes de producción completadas
+  - Ventas completadas
+  - Auditoría
+
+**Datos Involucrados:** IRQ-01 (campo Estado), IRQ-09 (Stock histórico)
+
+**Requisitos Funcionales:** RF-04, RF-31, OBJ-02 (Trazabilidad)
+
+---
+
+### MÓDULO PROCESOS PRODUCTIVOS
+
+#### **UC-13: Buscar etapa**
+
+**Actor Principal:** Administrador General, Operador de Producción
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Al menos un proceso productivo con etapas registrado
+- Permiso de lectura en módulo de Procesos Productivos (RF-29)
+
+**Flujo Principal:**
+1. Usuario accede a sección "Etapas" dentro del módulo de Procesos Productivos
+2. Sistema presenta pantalla de búsqueda con filtros
+3. Usuario ingresa criterios: nombre de etapa, proceso asociado, estado
+4. Usuario hace clic en "Buscar"
+5. Sistema ejecuta consulta
+6. Sistema muestra tabla paginada con etapas (máximo 50 por página)
+7. Para cada etapa muestra: código, nombre, proceso asociado, orden secuencial, tiempo estimado, estado
+8. Usuario puede seleccionar una etapa para ver detalles, editar, ver historial o eliminar
+
+**Flujos Alternativos:**
+- A1: Si no hay resultados, sistema muestra mensaje "No se encontraron etapas"
+- A2: Filtro por proceso: dropdown con todos los procesos activos
+- A3: Usuario puede exportar resultados a Excel
+
+**Consideraciones Técnicas:**
+- Etapas siempre están asociadas a un proceso (relación 1:N)
+- Buscar por nombre de etapa (LIKE)
+- Mostrar proceso asociado en la lista
+- Filtrar por estado (activo/inactivo)
+- Mostrar orden secuencial para validar flujo
+- NO permitir búsqueda sin filtrar por proceso (evitar queries muy pesadas)
+
+**Datos Involucrados:** IRQ-02 (Procesos Productivos - Etapas)
+
+**Requisitos Funcionales:** RF-05
+
+---
+
+#### **UC-14: Registrar etapa**
+
+**Actor Principal:** Administrador General
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Permiso de creación en módulo de Procesos Productivos (RF-29)
+- Proceso productivo seleccionado existe
+- Código de etapa dentro del proceso no existe
+
+**Flujo Principal:**
+1. Usuario selecciona un proceso productivo (desde UC-17)
+2. Usuario hace clic en "Agregar Etapa" dentro del proceso
+3. Sistema abre formulario con campos de IRQ-02 (Etapas)
+4. Usuario completa campos obligatorios:
+   - Nombre de la etapa (ej: "Preparación de materiales", "Mezcla")
+   - Descripción breve
+   - Orden/Secuencia dentro del proceso (número entero)
+   - Tiempo estimado (en minutos)
+   - Insumos requeridos (tabla: producto, cantidad, unidad)
+   - Resultado esperado de la etapa (descripción o producto intermedio)
+5. Usuario completa campos opcionales:
+   - Personal requerido (cantidad, especialización)
+   - Equipos requeridos
+   - Temperatura/Condiciones especiales
+   - Notas de seguridad/calidad
+6. Usuario hace clic en "Guardar"
+7. Sistema valida:
+   - Nombre no vacío
+   - Orden es número entero > 0
+   - Orden única dentro del proceso (no pueden haber dos etapas con mismo orden)
+   - Tiempo estimado > 0
+   - Al menos un insumo definido
+   - Productos en insumos existen y están activos
+   - Cantidades > 0
+8. Si validación correcta:
+   - Sistema crea registro en tabla ETAPAS
+   - Sistema crea registros en tabla ETAPA_INSUMOS (relaciona insumos)
+   - Sistema genera registro de auditoría
+   - Sistema muestra "Etapa registrada exitosamente"
+   - Sistema retorna a detalle del proceso con nueva etapa en lista
+9. Si validación falla, muestra errores
+
+**Flujos Alternativos:**
+- A1: Usuario intenta usar orden secuencial que ya existe:
+   - Sistema advierte "Ya existe etapa con orden N. ¿Desea renumerar?"
+   - Si sí: sistema incrementa órdenes de etapas posteriores
+- A2: Usuario cancela - retorna sin cambios
+- A3: Usuario agrega insumo que no existe:
+   - Sistema sugiere crearlo desde aquí (diálogo rápido, UC-10)
+
+**Consideraciones Técnicas:**
+- Tabla ETAPAS: ID, ID_PROCESO, NOMBRE, DESCRIPCION, ORDEN, TIEMPO_ESTIMADO, ESTADO
+- Tabla ETAPA_INSUMOS: ID, ID_ETAPA, ID_PRODUCTO, CANTIDAD, UNIDAD_MEDIDA
+- Orden es crítico para validar flujo correcto en órdenes de producción
+- Insumos forman la lista de materiales (BOM - Bill of Materials) de la etapa
+- Tiempo estimado se usa para calcular tiempo total del proceso
+- Al cambiar insumo después de crear la etapa: recalcular stock requerido
+- Permitir reordenar etapas después (UC-15)
+
+**Datos Involucrados:** IRQ-02 (Etapas), IRQ-01 (Productos como insumos)
+
+**Requisitos Funcionales:** RF-05
+
+---
+
+#### **UC-15: Modificar etapa**
+
+**Actor Principal:** Administrador General
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Etapa seleccionada existe en base de datos
+- Permiso de edición en módulo de Procesos Productivos (RF-29)
+- NO hay órdenes de producción en ejecución que usen esta etapa
+
+**Flujo Principal:**
+1. Usuario selecciona una etapa desde UC-13
+2. Usuario hace clic en botón "Editar"
+3. Sistema carga formulario con datos actuales de la etapa
+4. Usuario modifica uno o más campos permitidos
+5. Campos editables: nombre, descripción, orden, tiempo estimado, insumos, resultado esperado, personal, equipos, notas
+6. Usuario hace clic en "Guardar Cambios"
+7. Sistema valida cambios:
+   - Nombre no vacío
+   - Orden: si cambió, validar que nueva orden no esté duplicada
+   - Tiempo > 0
+   - Insumos: validar que productos existen y están activos
+   - Cantidades > 0
+8. Si validación correcta:
+   - Sistema registra valores anteriores
+   - Sistema actualiza registro ETAPA
+   - Sistema actualiza registros en ETAPA_INSUMOS (elimina viejos, agrega nuevos)
+   - Si cambió orden: recalcular orden de otras etapas si es necesario
+   - Sistema genera entrada de auditoría
+   - Sistema muestra "Cambios guardados exitosamente"
+9. Si validación falla, muestra errores
+
+**Flujos Alternativos:**
+- A1: Usuario cancela - descarta cambios
+- A2: Usuario intenta cambiar orden a una ya existente:
+   - Sistema advierte "¿Desea renumerar etapas posteriores?"
+- A3: Hay órdenes de producción activas usando esta etapa:
+   - Sistema advierte: "Hay N órdenes en ejecución. Cambios aplicarán a futuras órdenes"
+   - Permite cambio pero no afecta órdenes en progreso
+- A4: Usuario modifica un insumo que está siendo usado actualmente:
+   - Sistema advierte: "Cambio afectará futuras órdenes pero no actuales"
+
+**Consideraciones Técnicas:**
+- Optimistic locking con timestamp/versión
+- Si cambian insumos: auditar específicamente qué insumos se agregaron/eliminaron
+- Si cambia orden: recalcular orden de etapas posteriores automáticamente
+- No permitir modificar si hay órdenes de producción en ejecución (solo informar)
+- Mantener historial de cambios para auditoría de trazabilidad (OBJ-02)
+
+**Datos Involucrados:** IRQ-02 (Etapas)
+
+**Requisitos Funcionales:** RF-05, RF-31
+
+---
+
+#### **UC-16: Anular/habilitar etapa**
+
+**Actor Principal:** Administrador General
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Etapa seleccionada existe en base de datos
+- Permiso de cambio de estado en módulo de Procesos Productivos (RF-29)
+
+**Flujo Principal:**
+1. Usuario selecciona una etapa desde UC-13
+2. Usuario hace clic en botón "Cambiar Estado"
+3. Sistema presenta diálogo:
+   - Estado actual: [Activo/Anulado]
+   - Nuevo estado: [Activo/Anulado]
+   - Motivo de cambio (obligatorio)
+4. Usuario selecciona nuevo estado e ingresa motivo
+5. Usuario confirma
+6. Sistema valida:
+   - Si anulando: verificar que NO hay órdenes de producción en ejecución que usen esta etapa
+   - Si habilitando: no hay validaciones
+7. Si validación correcta:
+   - Sistema cambia estado a "Anulado"
+   - Sistema genera auditoría
+   - Sistema muestra confirmación
+8. Si validación falla, muestra advertencia
+
+**Flujos Alternativos:**
+- A1: Hay órdenes en ejecución usando la etapa:
+   - Sistema lista las órdenes
+   - Usuario decide: anular de todas formas / cancelar / esperar a que terminen
+
+**Consideraciones Técnicas:**
+- Soft delete: cambiar estado, no eliminar registro
+- Histórico de órdenes de producción se mantiene intacto (trazabilidad)
+- Si etapa está anulada, NO permitir crear nuevas órdenes con esa etapa
+- Impacto en proceso: si etapa está anulada, proceso queda incompleto (informar)
+
+**Datos Involucrados:** IRQ-02 (Etapas)
+
+**Requisitos Funcionales:** RF-05
+
+---
+
+#### **UC-17: Buscar proceso productivo**
+
+**Actor Principal:** Administrador General, Operador de Producción
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Al menos un proceso productivo registrado
+- Permiso de lectura en módulo de Procesos Productivos (RF-29)
+
+**Flujo Principal:**
+1. Usuario accede al módulo de Procesos Productivos desde el menú principal
+2. Sistema presenta pantalla de búsqueda con filtros
+3. Usuario ingresa criterios: nombre, código, producto final, estado
+4. Usuario hace clic en "Buscar"
+5. Sistema ejecuta consulta
+6. Sistema muestra tabla paginada con procesos (máximo 50 por página)
+7. Para cada proceso muestra: código, nombre, producto final, tiempo total estimado, cantidad de etapas, estado
+8. Usuario puede seleccionar un proceso para ver detalles, editar, ver etapas, editar etapas o eliminar
+
+**Flujos Alternativos:**
+- A1: Si no hay resultados, sistema muestra mensaje "No se encontraron procesos"
+- A2: Usuario puede filtrar por producto final (dropdown con productos activos)
+- A3: Usuario puede exportar resultados a Excel
+
+**Consideraciones Técnicas:**
+- Buscar por nombre, código, descripción (LIKE)
+- Mostrar tiempo total: suma de tiempos de todas las etapas
+- Mostrar cantidad de etapas para validar completitud del proceso
+- Filtrar por estado (activo/inactivo)
+- Mostrar indicador visual si proceso está siendo usado en órdenes activas
+
+**Datos Involucrados:** IRQ-02 (Procesos Productivos)
+
+**Requisitos Funcionales:** RF-05
+
+---
+
+#### **UC-18: Registrar proceso productivo**
+
+**Actor Principal:** Administrador General
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Permiso de creación en módulo de Procesos Productivos (RF-29)
+- Código de proceso no existe
+- Producto final seleccionado existe y está activo
+
+**Flujo Principal:**
+1. Usuario accede a opción "Nuevo Proceso Productivo" desde el módulo
+2. Sistema abre formulario con campos de IRQ-02
+3. Usuario completa campos obligatorios:
+   - Código del proceso (único, alfanumérico)
+   - Nombre descriptivo
+   - Descripción breve
+   - Producto final (dropdown con productos activos)
+4. Usuario hace clic en "Siguiente" para agregar etapas
+5. Sistema abre vista para agregar etapas (UC-14)
+6. Usuario agrega mínimo 1 etapa (recomendado: 2+)
+7. Una vez agregadas etapas, usuario hace clic en "Guardar Proceso"
+8. Sistema valida:
+   - Código único
+   - Nombre no vacío
+   - Producto final existe y está activo
+   - Al menos 1 etapa definida
+   - Etapas en orden secuencial correcto (1, 2, 3, ...)
+9. Si validación correcta:
+   - Sistema crea registro en tabla PROCESOS_PRODUCTIVOS
+   - Sistema vincula todas las etapas
+   - Sistema calcula tiempo total = suma de tiempos de etapas
+   - Sistema genera registro de auditoría
+   - Sistema muestra "Proceso registrado exitosamente"
+   - Sistema retorna a lista con nuevo proceso visible
+10. Si validación falla, muestra errores
+
+**Flujos Alternativos:**
+- A1: Usuario cancela en cualquier momento - retorna sin cambios
+- A2: Usuario olvida agregar etapas:
+   - Sistema advierte al intentar guardar: "Agregue al menos una etapa"
+- A3: Etapas con orden incorrecta (ej: 1, 3, 5 - faltando 2, 4):
+   - Sistema advierte y sugiere renumerar
+
+**Consideraciones Técnicas:**
+- Tabla PROCESOS_PRODUCTIVOS: ID, CODIGO, NOMBRE, DESCRIPCION, ID_PRODUCTO_FINAL, TIEMPO_TOTAL, ESTADO
+- Código: máximo 20 caracteres, alfanumérico
+- Tiempo total: se calcula automático (suma de etapas)
+- Validar que etapas tengan orden secuencial sin gaps
+- Producto final es el resultado de ejecutar todas las etapas
+- Proceso debe tener contexto de "receta" o "fórmula" (OBJ-04)
+
+**Datos Involucrados:** IRQ-02, IRQ-01 (Productos como resultado)
+
+**Requisitos Funcionales:** RF-05
+
+---
+
+#### **UC-19: Modificar proceso productivo**
+
+**Actor Principal:** Administrador General
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Proceso seleccionado existe en base de datos
+- Permiso de edición en módulo de Procesos Productivos (RF-29)
+- NO hay órdenes de producción activas usando este proceso
+
+**Flujo Principal:**
+1. Usuario selecciona un proceso desde UC-17
+2. Usuario hace clic en botón "Editar"
+3. Sistema carga formulario con datos del proceso
+4. Usuario puede modificar: nombre, descripción, producto final
+5. Usuario puede ver y editar etapas (acceso a UC-15)
+6. Usuario puede agregar nuevas etapas (UC-14)
+7. Usuario puede eliminar etapas (si no hay órdenes ejecutando)
+8. Usuario hace clic en "Guardar Cambios"
+9. Sistema valida:
+   - Nombre no vacío
+   - Producto final existe y activo
+   - Al menos 1 etapa definida
+   - Etapas en orden secuencial correcto
+10. Si validación correcta:
+   - Sistema actualiza registro PROCESO
+   - Sistema actualiza etapas (si cambiaron)
+   - Sistema recalcula tiempo total
+   - Sistema genera auditoría
+   - Sistema muestra "Cambios guardados exitosamente"
+11. Si validación falla, muestra errores
+
+**Flujos Alternativos:**
+- A1: Usuario cancela - descarta cambios
+- A2: Hay órdenes activas usando este proceso:
+   - Sistema advierte: "Hay N órdenes en ejecución. Cambios aplicarán a futuras órdenes"
+   - Permite cambio pero no afecta órdenes actuales
+- A3: Usuario intenta cambiar producto final:
+   - Sistema valida: producto nuevo existe y está activo
+   - Advierte: "Cambiar producto final puede afectar futuras órdenes"
+
+**Consideraciones Técnicas:**
+- Optimistic locking con timestamp/versión
+- Si cambian etapas: recalcular tiempo total automático
+- NO permitir modificar código del proceso (inmutable por trazabilidad)
+- Auditar cambios de etapas: qué se agregó, qué se eliminó, qué se modificó
+- Si hay órdenes activas: solo informar, no bloquear (permiten cambios para futuras)
+
+**Datos Involucrados:** IRQ-02
+
+**Requisitos Funcionales:** RF-05, RF-31
+
+---
+
+#### **UC-20: Anular/habilitar proceso productivo**
+
+**Actor Principal:** Administrador General
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Proceso seleccionado existe en base de datos
+- Permiso de cambio de estado en módulo de Procesos Productivos (RF-29)
+
+**Flujo Principal:**
+1. Usuario selecciona un proceso desde UC-17
+2. Usuario hace clic en botón "Cambiar Estado"
+3. Sistema presenta diálogo:
+   - Estado actual: [Activo/Anulado]
+   - Nuevo estado: [Activo/Anulado]
+   - Motivo de cambio (obligatorio)
+4. Usuario selecciona nuevo estado e ingresa motivo
+5. Usuario confirma
+6. Sistema valida:
+   - Si anulando: verificar que NO hay órdenes de producción en ejecución con este proceso
+   - Si habilitando: no hay validaciones
+7. Si validación correcta:
+   - Sistema cambia estado a "Anulado"
+   - Sistema genera auditoría
+   - Sistema muestra confirmación
+8. Si validación falla, muestra advertencia
+
+**Flujos Alternativos:**
+- A1: Hay órdenes activas usando este proceso:
+   - Sistema lista las órdenes
+   - Usuario decide: anular de todas formas / cancelar / esperar
+
+**Consideraciones Técnicas:**
+- Soft delete: cambiar estado, no eliminar registro
+- Histórico de órdenes de producción se mantiene intacto (trazabilidad OBJ-02)
+- Si proceso está anulado, NO permitir crear nuevas órdenes de producción
+- Impacto: si proceso está anulado, sus etapas quedan sin poder usarse en nuevas órdenes
+
+**Datos Involucrados:** IRQ-02
+
+**Requisitos Funcionales:** RF-05, OBJ-02 (Trazabilidad)
+
+---
+
+### MÓDULO PEDIDOS
+
+#### **UC-21: Buscar pedido**
+
+**Actor Principal:** Administrador General, Asistente Administrativo, Vendedor
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Al menos un pedido registrado en la base de datos
+- Permiso de lectura en módulo de Pedidos (RF-29)
+
+**Flujo Principal:**
+1. Usuario accede al módulo de Pedidos desde el menú principal
+2. Sistema presenta pantalla de búsqueda con filtros disponibles
+3. Usuario ingresa criterios de búsqueda: número de pedido, cliente, fecha, estado, rango de monto
+4. Usuario puede aplicar filtro "Pedidos vigentes" (checkbox) - muestra solo pendientes, confirmados, en proceso
+5. Usuario hace clic en botón "Buscar"
+6. Sistema valida que al menos un criterio esté completo
+7. Sistema ejecuta consulta en base de datos
+8. Sistema muestra tabla paginada (máximo 50 registros por página)
+9. Para cada pedido muestra: número, cliente, fecha, estado, cantidad items, monto total
+10. Usuario puede seleccionar un pedido para ver detalles, editar, confirmar, cancelar, o generar venta
+
+**Flujos Alternativos:**
+- A1: Si no hay resultados, sistema muestra mensaje "No se encontraron pedidos"
+- A2: Si búsqueda retorna más de 500, limita a primeros 500
+- A3: Usuario puede exportar resultados a Excel
+- A4: Usuario puede filtrar por rango de fechas (desde / hasta)
+- A5: Filtro "Solo mora": muestra pedidos cuya fecha de entrega está vencida
+
+**Consideraciones Técnicas:**
+- Número de pedido: único, auto-incrementado
+- Estados: pendiente, confirmado, en_proceso, listo_para_entrega, cancelado
+- Búsqueda case-insensitive
+- Implementar índices en número de pedido, cliente, fecha
+- Mostrar indicador visual si pedido está vencido (fecha de entrega < hoy)
+- Mostrar monto total con impuestos (si aplica, parametrizable)
+- Permite búsqueda por nombre de cliente incompleto
+
+**Datos Involucrados:** IRQ-07 (Información de Pedidos)
+
+**Requisitos Funcionales:** RF-17
+
+---
+
+#### **UC-22: Registrar pedido**
+
+**Actor Principal:** Vendedor, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Permiso de creación en módulo de Pedidos (RF-29)
+- Cliente seleccionado existe, está activo y no está bloqueado
+- Al menos un producto registrado y activo
+
+**Flujo Principal:**
+1. Usuario accede a opción "Nuevo Pedido" desde módulo de Pedidos
+2. Sistema abre formulario con campos de IRQ-07
+3. Usuario completa datos generales:
+   - Cliente (dropdown, búsqueda por nombre o CUIT)
+   - Fecha del pedido (auto-rellena con hoy)
+   - Fecha de entrega solicitada (picker, mínimo hoy)
+   - Condición de venta (contado/crédito, hereda del cliente pero permitir cambiar)
+4. Usuario agrega items del pedido (tabla detallada):
+   - Producto (dropdown, búsqueda, muestra stock disponible)
+   - Cantidad (número entero > 0)
+   - Precio unitario (auto-llena con precio actual, permitir editar)
+   - Descuento % (opcional)
+   - Subtotal (auto-calcula)
+5. Sistema calcula automático:
+   - Total items
+   - Subtotal
+   - Impuesto (si aplica, según IRQ-13)
+   - Monto total
+6. Usuario ingresa campos adicionales:
+   - Observaciones/Notas especiales
+   - Forma de pago requerida
+   - Lugar de entrega (si es diferente al del cliente)
+7. Usuario valida stock disponible:
+   - Sistema muestra para cada item: stock actual, comprometido, disponible
+   - Si cantidad solicitada > stock disponible: advierte "Stock insuficiente"
+8. Usuario hace clic en "Guardar Pedido"
+9. Sistema valida:
+   - Cliente existe y está activo
+   - Al menos 1 item agregado
+   - Cantidades > 0
+   - Productos existen y están activos
+   - Precios > 0
+   - Fecha entrega >= fecha pedido
+   - Si cliente tiene límite de crédito: validar que monto no lo supera
+10. Si validación correcta:
+   - Sistema crea registro en tabla PEDIDOS (estado = "pendiente")
+   - Sistema crea registros en PEDIDOS_DETALLE (1 por item)
+   - Sistema COMPROMETE stock: stock_comprometido += cantidad por producto (RF-02)
+   - Sistema genera número de pedido único
+   - Sistema registra en auditoría
+   - Sistema muestra "Pedido registrado exitosamente. Número: PED-XXXXX"
+   - Sistema retorna a lista con nuevo pedido visible
+11. Si validación falla, muestra errores
+
+**Flujos Alternativos:**
+- A1: Usuario cancela - retorna sin cambios
+- A2: Stock insuficiente para algún item:
+   - Sistema advierte: "¿Registrar de todas formas? Stock será comprometido"
+   - Si usuario confirma: crea pedido con nota en observaciones
+- A3: Cliente alcanzaría límite de crédito:
+   - Sistema advierte: "Monto total es $X. Límite de crédito es $Y. Crédito disponible: $Z"
+   - Usuario decide: registrar de todas formas / cancelar / reducir cantidad
+- A4: Usuario desea agregar producto que no existe:
+   - Sistema ofrece crear producto desde aquí (diálogo rápido, UC-10)
+
+**Consideraciones Técnicas:**
+- Tabla PEDIDOS: ID, NUMERO, ID_CLIENTE, FECHA_PEDIDO, FECHA_ENTREGA, ESTADO, CONDICION_VENTA, MONTO_TOTAL, OBSERVACIONES
+- Tabla PEDIDOS_DETALLE: ID, ID_PEDIDO, ID_PRODUCTO, CANTIDAD, PRECIO_UNITARIO, DESCUENTO, SUBTOTAL
+- Número de pedido: formato "PED-XXXXX" (auto-incrementado)
+- Stock comprometido: importante para saber disponibilidad real
+- Precio unitario: se puede cambiar en el momento (queda registrado en el pedido)
+- Validar límite de crédito ANTES de guardar
+- Transacción atómica: pedido + detalle + compromiso de stock
+
+**Datos Involucrados:** IRQ-07 (Pedidos), IRQ-06 (Clientes), IRQ-01 (Productos), IRQ-09 (Stock)
+
+**Requisitos Funcionales:** RF-17, RF-02 (compromiso de stock), RF-19 (validar límite crédito)
+
+---
+
+#### **UC-23: Modificar pedido**
+
+**Actor Principal:** Vendedor, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Pedido seleccionado existe en base de datos
+- Permiso de edición en módulo de Pedidos (RF-29)
+- Estado del pedido es "pendiente" o "confirmado" (NO se puede editar en ejecución/cancelado)
+
+**Flujo Principal:**
+1. Usuario selecciona un pedido desde UC-21
+2. Usuario hace clic en botón "Editar"
+3. Sistema carga formulario con datos del pedido
+4. Usuario puede modificar:
+   - Fecha de entrega (no puede ser anterior a hoy)
+   - Observaciones/Notas
+   - Items del pedido:
+     - Cambiar cantidad (ajusta stock comprometido)
+     - Cambiar precio unitario
+     - Cambiar descuento
+     - Eliminar items
+     - Agregar nuevos items
+5. Sistema actualiza automático: subtotal, monto total
+6. Usuario hace clic en "Guardar Cambios"
+7. Sistema valida:
+   - Fecha entrega >= hoy
+   - Al menos 1 item en pedido
+   - Cantidades > 0
+   - Precios > 0
+   - Productos activos
+   - Si cambió monto total: validar que cliente no supera límite de crédito
+8. Si validación correcta:
+   - Sistema ajusta stock comprometido por cada item:
+     - Si cantidad aumenta: comprometer más stock
+     - Si cantidad disminuye: liberar stock comprometido
+     - Si se elimina item: liberar todo el stock comprometido de ese item
+   - Sistema actualiza registro PEDIDOS
+   - Sistema actualiza registros PEDIDOS_DETALLE (elimina, agrega, modifica)
+   - Sistema genera auditoría con detalle de cambios
+   - Sistema muestra "Cambios guardados exitosamente"
+9. Si validación falla, muestra errores
+
+**Flujos Alternativos:**
+- A1: Usuario cancela - descarta cambios, stock vuelve a estado anterior
+- A2: Usuario intenta cambiar cliente:
+   - Sistema NO permite (muestra "Cliente no se puede cambiar. Cancele y registre nuevo pedido")
+- A3: Usuario intenta cambiar a estado diferente:
+   - NO permitir desde aquí (crear UC-24 para cambios de estado)
+- A4: Stock disponible cambió desde que se abrió el pedido:
+   - Sistema advierte al guardar: "Stock disponible cambió. Cantidad actual: XXX. ¿Continuar?"
+- A5: Hay órden de producción generada de este pedido:
+   - Sistema advierte: "Hay orden de producción asociada. Cambios pueden afectarla"
+
+**Consideraciones Técnicas:**
+- Optimistic locking con timestamp/versión
+- Auditar TODOS los cambios: qué items se modificaron, qué se agregó, qué se eliminó
+- Recalcular stock comprometido por cada cambio
+- NO permitir cambiar cliente (es parte de la identidad del pedido)
+- Registrar histórico de versiones del pedido
+- Si hay orden de producción asociada: solo advertir (no bloquear)
+- Validar límite de crédito con nuevo monto
+
+**Datos Involucrados:** IRQ-07 (Pedidos), IRQ-09 (Stock)
+
+**Requisitos Funcionales:** RF-17, RF-31 (auditoría)
+
+---
+
+#### **UC-24: Cancelar pedido**
+
+**Actor Principal:** Vendedor, Asistente Administrativo, Administrador General
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Pedido seleccionado existe en base de datos
+- Permiso de cancelación en módulo de Pedidos (RF-29)
+- Estado del pedido es "pendiente", "confirmado" o "en_proceso" (NO se puede cancelar cancelado o completado)
+
+**Flujo Principal:**
+1. Usuario selecciona un pedido desde UC-21
+2. Usuario hace clic en botón "Cancelar Pedido"
+3. Sistema presenta diálogo de confirmación:
+   - Muestra número de pedido, cliente, monto
+   - Campo obligatorio: "Motivo de cancelación"
+4. Usuario ingresa motivo (ej: "Cliente solicitó cancelación", "Stock no disponible", etc.)
+5. Usuario hace clic en "Confirmar Cancelación"
+6. Sistema valida:
+   - Si pedido está en estado "en_proceso":
+     - Verificar si hay orden de producción en ejecución
+     - Si sí: advertir "Hay orden de producción activa. ¿Confirma cancelación?"
+7. Si validación correcta:
+   - Sistema cambia estado a "cancelado"
+   - Sistema libera TODOS los stock comprometidos de este pedido
+   - Sistema genera auditoría: usuario, timestamp, motivo, cambio de estado
+   - Si hay orden de producción asociada: marcarla como "cancelada" también
+   - Sistema muestra confirmación
+   - Sistema retorna a lista de pedidos
+8. Si validación falla, muestra advertencia
+
+**Flujos Alternativos:**
+- A1: Usuario presiona "Cancelar" en diálogo - retorna sin cambios
+- A2: Hay orden de producción en ejecución:
+   - Sistema advierte: "Hay orden de producción POP-XXXXX en ejecución. ¿Desea cancelarla también?"
+   - Si sí: cancela ambas
+   - Si no: solo cancela pedido, mantiene orden (inconsistencia posible)
+- A3: Hay ventas ya generadas del pedido:
+   - Sistema advierte: "Ya hay venta generada. Considere devolución en módulo de Ventas"
+   - Permite cancelar pero nota debe quedar clara en auditoría
+
+**Consideraciones Técnicas:**
+- Soft delete: cambiar estado, no eliminar registro
+- Liberar stock comprometido: stock_comprometido -= cantidad por cada item
+- Auditoría debe registrar: motivo, quién canceló, cuándo
+- Mantener histórico: pedido cancelado sigue visible en búsqueda (con filtro "Mostrar cancelados")
+- Si hay venta asociada: considerar si debe cancelarse también (lógica de negocio)
+- Impacto en órdenes de producción: marcar como canceladas
+
+**Datos Involucrados:** IRQ-07 (Pedidos), IRQ-09 (Stock)
+
+**Requisitos Funcionales:** RF-17, RF-31
+
+---
+
+#### **UC-25: Consultar pedidos vigentes**
+
+**Actor Principal:** Vendedor, Asistente Administrativo, Operador de Producción
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Al menos un pedido vigente en la base de datos
+- Permiso de lectura en módulo de Pedidos (RF-29)
+
+**Flujo Principal:**
+1. Usuario accede a opción "Pedidos Vigentes" desde módulo de Pedidos (acceso directo desde dashboard)
+2. Sistema presenta lista pre-filtrada mostrando SOLO pedidos vigentes
+3. Criterios para "vigente": estado en (pendiente, confirmado, en_proceso, listo_para_entrega)
+4. Sistema ordena por: fecha de entrega (próximos primero)
+5. Sistema muestra tabla con:
+   - Número de pedido
+   - Cliente
+   - Fecha de entrega
+   - Días restantes (fecha entrega - hoy)
+   - Estado (con color: rojo si vencido, amarillo si próximo, verde si en plazo)
+   - Cantidad items
+   - Monto total
+   - Indicador de orden de producción asociada (si existe)
+6. Usuario puede hacer clic en un pedido para ver detalles completos
+7. Usuario puede:
+   - Generar orden de producción (RF-23, UC-32)
+   - Generar venta (UC-27)
+   - Ver detalles completos
+   - Cambiar estado manualmente si es necesario
+
+**Flujos Alternativos:**
+- A1: Si no hay pedidos vigentes, sistema muestra mensaje "Todos los pedidos están cerrados"
+- A2: Usuario puede filtrar por cliente (adicional a la lista pre-filtrada)
+- A3: Usuario puede exportar a Excel para seguimiento
+
+**Consideraciones Técnicas:**
+- Mostrar "Días restantes": cálculo dinámico, negativo si está vencido
+- Color de indicador:
+  - Rojo: fecha de entrega < hoy (VENCIDO)
+  - Amarillo: fecha de entrega <= hoy + 2 días (PRÓXIMO)
+  - Verde: fecha de entrega > hoy + 2 días (EN PLAZO)
+- Mostrar indicador si tiene orden de producción asociada
+- Esta vista es crítica para el flujo de negocio: seguimiento de compromisos de entrega
+- Refresh automático cada 5 minutos (considerar para fase 2)
+- Permitir exportar a Excel para seguimiento gerencial
+
+**Datos Involucrados:** IRQ-07 (Pedidos), IRQ-03 (Órdenes de Producción)
+
+**Requisitos Funcionales:** RF-17
+
+---
+
+### MÓDULO VENTAS
+
+#### **UC-26: Buscar venta**
+
+**Actor Principal:** Administrador General, Asistente Administrativo, Vendedor
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Al menos una venta registrada en la base de datos
+- Permiso de lectura en módulo de Ventas (RF-29)
+
+**Flujo Principal:**
+1. Usuario accede al módulo de Ventas desde el menú principal
+2. Sistema presenta pantalla de búsqueda con filtros disponibles
+3. Usuario ingresa criterios de búsqueda: número de venta, cliente, fecha, estado, rango de monto, número de pedido origen
+4. Usuario puede aplicar filtro "Ventas pendientes de pago" (checkbox)
+5. Usuario hace clic en botón "Buscar"
+6. Sistema valida que al menos un criterio esté completo
+7. Sistema ejecuta consulta en base de datos
+8. Sistema muestra tabla paginada (máximo 50 registros por página)
+9. Para cada venta muestra: número, cliente, fecha, estado, cantidad items, monto total, estado de pago
+10. Usuario puede seleccionar una venta para ver detalles, editar, registrar pago, cancelar, o imprimir comprobante
+
+**Flujos Alternativos:**
+- A1: Si no hay resultados, sistema muestra mensaje "No se encontraron ventas"
+- A2: Si búsqueda retorna más de 500, limita a primeros 500
+- A3: Usuario puede exportar resultados a Excel
+- A4: Usuario puede filtrar por estado de pago (pagado, parcialmente pagado, sin pagar)
+- A5: Usuario puede filtrar por forma de pago (contado, crédito)
+
+**Consideraciones Técnicas:**
+- Número de venta: único, auto-incrementado, formato "VTA-XXXXX"
+- Estados: pendiente, pagada, cancelada, anulada
+- Búsqueda case-insensitive
+- Implementar índices en número de venta, cliente, fecha
+- Mostrar indicador visual si venta está vencida (fecha vencimiento < hoy)
+- Mostrar estado de pago como badge (Pagado=verde, Parcial=amarillo, Impago=rojo)
+- Vincular ventas con pedidos de origen (mostrar número de pedido si existe)
+
+**Datos Involucrados:** IRQ-08 (Información de Ventas)
+
+**Requisitos Funcionales:** RF-18
+
+---
+
+#### **UC-27: Registrar Venta**
+
+**Actor Principal:** Vendedor, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Permiso de creación en módulo de Ventas (RF-29)
+- Cliente seleccionado existe, está activo y no está bloqueado
+- Al menos un producto registrado y activo
+- Puede originarse de un pedido (UC-22) o ser venta directa
+
+**Flujo Principal:**
+1. Usuario accede a opción "Nueva Venta" desde módulo de Ventas
+2. Sistema abre formulario con campos de IRQ-08
+3. Opción A: Venta desde Pedido (flujo recomendado)
+   - Usuario selecciona pedido (búsqueda UC-21)
+   - Sistema carga automáticamente:
+     - Cliente
+     - Items del pedido
+     - Precios
+     - Observaciones
+   - Usuario puede modificar cantidades/precios antes de confirmar
+4. Opción B: Venta Directa (sin pedido previo)
+   - Usuario completa datos generales:
+     - Cliente (dropdown)
+     - Fecha de venta (auto-rellena con hoy)
+     - Condición de venta (contado/crédito, hereda del cliente)
+   - Usuario agrega items (tabla):
+     - Producto (dropdown, búsqueda)
+     - Cantidad (número entero > 0)
+     - Precio unitario (se propone el vigente)
+     - Descuento %
+     - Subtotal (auto-calcula)
+5. Sistema calcula automático:
+   - Total items
+   - Subtotal
+   - Impuesto (si aplica)
+   - Monto total
+6. Usuario completa campos adicionales:
+   - Forma de pago (contado/cheque/transferencia/tarjeta)
+   - Si crédito: plazo de pago
+   - Observaciones
+7. Usuario hace clic en "Guardar Venta"
+8. Sistema valida:
+   - Cliente existe y está activo
+   - Al menos 1 item
+   - Cantidades > 0
+   - Productos activos
+   - Precios > 0
+   - Si es venta directa: validar stock disponible (NOT comprometido)
+9. Si validación correcta:
+   - Sistema crea registro en tabla VENTAS (estado = "pendiente")
+   - Sistema crea registros en VENTAS_DETALLE
+   - Sistema DEDUCE stock: stock_actual -= cantidad (RF-02)
+   - Sistema genera número de venta único
+   - Si fue desde pedido: cambiar estado pedido a "listo_para_entrega"
+   - Sistema crea registro en CUENTAS_CORRIENTES (IRQ-10):
+     - Si contado: monto se registra como pago inmediato
+     - Si crédito: monto se registra como deuda nueva
+   - Sistema registra en auditoría
+   - Sistema muestra "Venta registrada exitosamente. Número: VTA-XXXXX"
+   - Sistema ofrece imprimir comprobante interno (no fiscal)
+10. Si validación falla, muestra errores
+
+**Flujos Alternativos:**
+- A1: Usuario cancela - retorna sin cambios
+- A2: Stock disponible insuficiente:
+   - Sistema advierte: "Stock insuficiente. Disponible: XXX. Solicita: YYY"
+   - Usuario puede: registrar de todas formas (nota en observaciones) / cancelar / reducir cantidad
+- A3: Usuario crea venta directa sin asociarla a pedido:
+   - Queda como venta "independiente"
+- A4: Comprobante interno es solo para control, NO es comprobante fiscal
+
+**Consideraciones Técnicas:**
+- NO se genera factura fiscal - solo comprobante interno de control
+- El sistema NO integra con AFIP ni sistemas de facturación
+   - Puede cambiar estado manualmente después
+- A4: Venta en contado: sistema pregunta si registrar pago inmediato
+- A5: Cliente es mayorista con descuento especial:
+   - Sistema propone descuento automático (parametrizable, IRQ-13)
+   - Usuario puede aceptar o modificar
+
+**Consideraciones Técnicas:**
+- Tabla VENTAS: ID, NUMERO, ID_CLIENTE, FECHA_VENTA, ESTADO, CONDICION_VENTA, MONTO_TOTAL, ID_PEDIDO_ORIGEN
+- Tabla VENTAS_DETALLE: ID, ID_VENTA, ID_PRODUCTO, CANTIDAD, PRECIO_UNITARIO, DESCUENTO, SUBTOTAL
+- Número de venta: formato "VTA-XXXXX"
+- Stock: DEDUCIR (no comprometer) al generar venta
+- Si es desde pedido: LIBERAR stock comprometido del pedido y DEDUCIR stock real
+- Crear movimiento en CUENTAS_CORRIENTES automáticamente
+- Si contado: PAGAR inmediatamente o esperar registro de pago (UC-30)
+- Transacción atómica: venta + detalle + stock + cuenta corriente
+
+**Datos Involucrados:** IRQ-08 (Ventas), IRQ-06 (Clientes), IRQ-01 (Productos), IRQ-09 (Stock), IRQ-10 (Cuentas Corrientes)
+
+**Requisitos Funcionales:** RF-18, RF-02 (deducir stock), RF-19 (crear cuenta corriente), RF-20 (registrar movimiento)
+
+---
+
+#### **UC-28: Modificar venta**
+
+**Actor Principal:** Vendedor, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Venta seleccionada existe en base de datos
+- Permiso de edición en módulo de Ventas (RF-29)
+- Estado de venta es "pendiente" (NO se puede editar pagada, cancelada, anulada)
+
+**Flujo Principal:**
+1. Usuario selecciona una venta desde UC-26
+2. Usuario hace clic en botón "Editar"
+3. Sistema carga formulario con datos de la venta
+4. Usuario puede modificar:
+   - Observaciones/Notas
+   - Items de la venta:
+     - Cambiar cantidad (ajusta stock)
+     - Cambiar precio unitario
+     - Cambiar descuento
+     - Eliminar items (devuelve stock)
+     - Agregar nuevos items
+5. Sistema actualiza automático: subtotal, monto total
+6. Usuario hace clic en "Guardar Cambios"
+7. Sistema valida:
+   - Al menos 1 item en venta
+   - Cantidades > 0
+   - Precios > 0
+   - Productos activos
+   - Stock disponible para nuevos items o aumentos de cantidad
+8. Si validación correcta:
+   - Sistema ajusta stock por cada cambio:
+     - Si cantidad aumenta: deducir stock adicional
+     - Si cantidad disminuye: devolver stock
+     - Si se elimina item: devolver todo el stock del item
+   - Sistema actualiza registro VENTAS
+   - Sistema actualiza registros VENTAS_DETALLE
+   - Sistema ajusta CUENTAS_CORRIENTES si cambió monto total
+   - Sistema genera auditoría con detalle de cambios
+   - Sistema muestra "Cambios guardados exitosamente"
+9. Si validación falla, muestra errores
+
+**Flujos Alternativos:**
+- A1: Usuario cancela - descarta cambios, stock vuelve a estado anterior
+- A2: Usuario intenta cambiar cliente:
+   - Sistema NO permite (muestra "Cliente no se puede cambiar")
+- A3: Stock disponible insuficiente para aumentar cantidad:
+   - Sistema advierte: "Stock insuficiente. Disponible: XXX"
+   - Usuario puede confirmar (nota en auditoría) o reducir
+- A4: Venta ya fue pagada:
+   - Sistema NO permite editar (muestra "Venta pagada no se puede modificar")
+
+**Consideraciones Técnicas:**
+- Solo se puede editar en estado "pendiente"
+- Auditar TODOS los cambios: items modificados, agregados, eliminados
+- Recalcular stock automáticamente
+- Recalcular cuentas corrientes si cambió monto
+- NO permitir cambiar cliente
+- Registrar versiones de la venta (histórico de cambios)
+- Validar stock en tiempo real
+
+**Datos Involucrados:** IRQ-08 (Ventas), IRQ-09 (Stock), IRQ-10 (Cuentas Corrientes)
+
+**Requisitos Funcionales:** RF-18, RF-31 (auditoría)
+
+---
+
+#### **UC-29: Cancelar venta**
+
+**Actor Principal:** Vendedor, Asistente Administrativo, Administrador General
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Venta seleccionada existe en base de datos
+- Permiso de cancelación en módulo de Ventas (RF-29)
+- Estado de venta es "pendiente" o "pagada" (NO se puede cancelar cancelada/anulada)
+
+**Flujo Principal:**
+1. Usuario selecciona una venta desde UC-26
+2. Usuario hace clic en botón "Cancelar Venta"
+3. Sistema presenta diálogo de confirmación:
+   - Muestra número de venta, cliente, monto
+   - Campo obligatorio: "Motivo de cancelación"
+4. Usuario ingresa motivo (ej: "Cliente solicitó devolución", "Error en registro", etc.)
+5. Usuario hace clic en "Confirmar Cancelación"
+6. Sistema valida:
+   - Si venta fue pagada: advertir "Venta pagada será cancelada. ¿Registra devolución de dinero?"
+7. Si validación correcta:
+   - Sistema cambia estado a "cancelada"
+   - Sistema DEVUELVE stock: stock_actual += cantidad para cada item
+   - Sistema actualiza CUENTAS_CORRIENTES:
+     - Si fue crédito: revertir deuda
+     - Si fue contado: considerar devolución de dinero
+   - Sistema genera auditoría: usuario, timestamp, motivo, stock devuelto
+   - Si hay pedido asociado: cambiar estado pedido a "cancelado"
+   - Sistema muestra confirmación
+   - Sistema retorna a lista de ventas
+8. Si validación falla, muestra advertencia
+
+**Flujos Alternativos:**
+- A1: Usuario presiona "Cancelar" en diálogo - retorna sin cambios
+- A2: Venta fue pagada:
+   - Sistema pregunta: "¿Registrar devolución de dinero?"
+   - Si sí: abre UC-30 para registrar pago de devolución
+   - Si no: venta se cancela pero no se registra devolución (nota en observaciones)
+
+**Consideraciones Técnicas:**
+- Soft delete: cambiar estado, no eliminar registro
+- Devolver stock: stock_actual += cantidad para cada item
+- Revertir movimiento en cuentas corrientes
+- Auditoría detallada de cancelación
+- Mantener histórico: venta cancelada visible en búsqueda
+- Impacto en pedido origen: cambiar estado a "cancelado"
+- NO hay integración con sistemas de facturación externos
+
+**Datos Involucrados:** IRQ-08 (Ventas), IRQ-09 (Stock), IRQ-10 (Cuentas Corrientes)
+
+**Requisitos Funcionales:** RF-18, RF-31
+
+---
+
+#### **UC-30: Registrar pago**
+
+**Actor Principal:** Vendedor, Asistente Administrativo, Administrador General
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Permiso de registro de pagos en módulo de Ventas (RF-29)
+- Cliente tiene deuda (venta en crédito sin pagar o parcialmente pagada)
+- Puede ser desde UC-26 (módulo de Ventas) o desde UC-41 (módulo de Cuentas Corrientes)
+
+**Flujo Principal:**
+1. Usuario selecciona una venta desde UC-26 o cliente desde UC-41
+2. Usuario hace clic en botón "Registrar Pago"
+3. Sistema abre diálogo de pago con campos:
+   - Referencia de venta/cliente
+   - Saldo pendiente (read-only)
+   - Monto a pagar (numérico, validar > 0 y <= saldo pendiente)
+   - Forma de pago (dropdown: efectivo, cheque, transferencia, tarjeta)
+   - Fecha de pago (auto-rellena con hoy)
+   - Número de comprobante (opcional)
+4. Usuario completa campos según forma de pago:
+   - Si cheque: número de cheque, banco, fecha de vencimiento
+   - Si transferencia: comprobante de transferencia, referencia
+   - Si tarjeta: últimos 4 dígitos, autorización
+   - Si efectivo: nada adicional
+5. Usuario hace clic en "Registrar Pago"
+6. Sistema valida:
+   - Monto > 0
+   - Monto <= saldo pendiente
+   - Forma de pago válida
+   - Fecha pago <= hoy (no permitir fechas futuras)
+7. Si validación correcta:
+   - Sistema crea registro en tabla PAGOS (con estado "registrado")
+   - Sistema actualiza CUENTAS_CORRIENTES: resta monto del saldo deudor
+   - Si monto = saldo pendiente: cambiar estado de venta a "pagada"
+   - Si monto < saldo pendiente: cambiar estado a "parcialmente_pagada"
+   - Sistema genera registro en MOVIMIENTOS_CUENTA_CORRIENTE (IRQ-10)
+   - Sistema registra en auditoría
+   - Sistema muestra "Pago registrado exitosamente"
+   - Sistema ofrece imprimir comprobante de pago
+8. Si validación falla, muestra errores
+
+**Flujos Alternativos:**
+- A1: Usuario cancela - retorna sin cambios
+- A2: Pago en cheque con fecha futura:
+   - Sistema advierte: "Cheque futuro será registrado pero no afectará saldo hasta fecha vencimiento"
+   - Permite registrar como "cheque diferido"
+- A3: Pago mayor al saldo pendiente:
+   - Sistema advierte: "Monto es mayor al adeudado. Abonará $X y quedará acreedor con $Y"
+   - Usuario decide: registrar con excedente / ajustar monto
+- A4: Cliente tiene múltiples deudas (múltiples ventas):
+   - Sistema pregunta: "¿Aplicar pago a venta específica o a cuenta corriente general?"
+   - Si general: afecta todas las deudas de ese cliente
+
+**Consideraciones Técnicas:**
+- Tabla PAGOS: ID, ID_VENTA, MONTO, FORMA_PAGO, FECHA_PAGO, ESTADO, NUMERO_COMPROBANTE
+- Tabla MOVIMIENTOS_CUENTA_CORRIENTE: registra todos los movimientos (ventas, pagos, ajustes)
+- Validar que monto <= saldo pendiente
+- Validar fecha pago <= hoy
+- Actualizar automático estado de venta según monto
+- Cheques diferidos: registrar pero marcar como "pendiente cobro"
+- Transacción atómica: pago + actualización cuenta corriente + movimiento
+- Generar comprobante de pago automáticamente
+
+**Datos Involucrados:** IRQ-10 (Cuentas Corrientes, Pagos), IRQ-08 (Ventas)
+
+**Requisitos Funcionales:** RF-20, RF-21 (consultar estado cuenta), RF-31
+
+---
+
+### MÓDULO ÓRDENES DE PRODUCCIÓN
+
+#### **UC-31: Buscar orden de producción**
+
+**Actor Principal:** Administrador General, Asistente Administrativo, Operador de Producción
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Al menos una orden de producción registrada en la base de datos
+- Permiso de lectura en módulo de Órdenes de Producción (RF-29)
+
+**Flujo Principal:**
+1. Usuario accede al módulo de Órdenes de Producción desde el menú principal
+2. Sistema presenta pantalla de búsqueda con filtros disponibles
+3. Usuario ingresa criterios de búsqueda: número de orden, proceso productivo, estado, fecha, prioridad
+4. Usuario puede aplicar filtro "Órdenes en ejecución" (checkbox) - muestra solo pendientes, en progreso
+5. Usuario hace clic en botón "Buscar"
+6. Sistema valida que al menos un criterio esté completo
+7. Sistema ejecuta consulta en base de datos
+8. Sistema muestra tabla paginada (máximo 50 registros por página)
+9. Para cada orden muestra: número, proceso, estado, fecha inicio, fecha vencimiento, % avance, prioridad
+10. Usuario puede seleccionar una orden para ver detalles, editar, registrar avance, completar o cancelar
+
+**Flujos Alternativos:**
+- A1: Si no hay resultados, sistema muestra mensaje "No se encontraron órdenes"
+- A2: Si búsqueda retorna más de 500, limita a primeros 500
+- A3: Usuario puede exportar resultados a Excel
+- A4: Usuario puede filtrar por prioridad (baja, media, alta, crítica)
+- A5: Usuario puede filtrar por operador asignado
+
+**Consideraciones Técnicas:**
+- Número de orden: único, auto-incrementado, formato "POP-XXXXX"
+- Estados: pendiente, en_proceso, completada, cancelada
+- Mostrar % avance: basado en etapas completadas (etapas completadas / total etapas * 100)
+- Implementar índices en número, proceso, estado
+- Mostrar indicador visual si orden está vencida (fecha vencimiento < hoy)
+- Color de prioridad: rojo=crítica, naranja=alta, amarillo=media, verde=baja
+
+**Datos Involucrados:** IRQ-03 (Órdenes de Producción), IRQ-02 (Procesos Productivos)
+
+**Requisitos Funcionales:** RF-06
+
+---
+
+#### **UC-32: Registrar orden de producción**
+
+**Actor Principal:** Administrador General, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Permiso de creación en módulo de Órdenes de Producción (RF-29)
+- Proceso productivo seleccionado existe y está activo
+- Pedido de origen existe (opcional, puede ser orden directa)
+- Stock de insumos disponible
+
+**Flujo Principal:**
+1. Usuario accede a opción "Nueva Orden de Producción" desde módulo o desde UC-25 (pedidos vigentes)
+2. Sistema abre formulario con campos de IRQ-03
+3. Opción A: Orden desde Pedido (flujo recomendado para OBJ-05)
+   - Usuario selecciona pedido (búsqueda desde UC-21)
+   - Sistema carga automáticamente:
+     - Proceso productivo (si está mapeado con el producto del pedido)
+     - Cantidad a producir (cantidad del pedido)
+     - Observaciones del pedido
+   - Sistema valida disponibilidad de insumos para la cantidad
+4. Opción B: Orden Directa (sin pedido de origen)
+   - Usuario completa datos generales:
+     - Proceso productivo (dropdown, búsqueda)
+     - Cantidad a producir (número entero > 0)
+     - Fecha de vencimiento requerida (picker, mínimo hoy + tiempo total del proceso)
+     - Prioridad (baja, media, alta, crítica)
+     - Observaciones
+5. Sistema valida stock de insumos requeridos:
+   - Para cada insumo de cada etapa: cantidad_requerida * cantidad_producir
+   - Si stock insuficiente: advertir "Stock insuficiente para insumo XXX"
+6. Usuario completa campos adicionales:
+   - Operador responsable (dropdown, operadores activos)
+   - Fecha inicio planeada (auto-rellena con hoy)
+   - Observaciones especiales
+7. Usuario hace clic en "Guardar Orden"
+8. Sistema valida:
+   - Proceso existe y está activo
+   - Cantidad > 0
+   - Fecha vencimiento >= fecha inicio + tiempo total del proceso
+   - Stock disponible para todos los insumos requeridos
+   - Operador existe y está activo
+9. Si validación correcta:
+   - Sistema crea registro en tabla ORDENES_PRODUCCION (estado = "pendiente")
+   - Sistema crea registros en ORDENES_PRODUCCION_ETAPAS (1 por cada etapa del proceso)
+   - Sistema calcula stock requerido por insumo (IRQ-02, Etapas)
+   - Sistema COMPROMETE insumos: stock_comprometido += cantidad_requerida (similar a pedidos)
+   - Sistema genera número de orden único
+   - Si fue desde pedido: vincular en ORDENES_PRODUCCION.ID_PEDIDO_ORIGEN
+   - Sistema registra en auditoría
+   - Sistema muestra "Orden registrada exitosamente. Número: POP-XXXXX"
+   - Sistema retorna a lista con nueva orden visible
+10. Si validación falla, muestra errores
+
+**Flujos Alternativos:**
+- A1: Usuario cancela - retorna sin cambios
+- A2: Stock insuficiente de insumos:
+   - Sistema advierte: "Stock insuficiente para insumo XXX. Disponible: YYY, Requiere: ZZZ"
+   - Usuario puede: registrar de todas formas (nota en auditoría) / cancelar / reducir cantidad
+- A3: Cantidad muy alta:
+   - Sistema advierte: "Cantidad requiere XXX días de producción"
+   - Ajusta automáticamente fecha vencimiento sugerida
+- A4: Usuario desea crear orden para nuevo proceso:
+   - Sistema ofrece crearla desde aquí (acceso a UC-18)
+
+**Consideraciones Técnicas:**
+- Tabla ORDENES_PRODUCCION: ID, NUMERO, ID_PROCESO, CANTIDAD, ESTADO, ID_PEDIDO_ORIGEN, FECHA_INICIO, FECHA_VENCIMIENTO, PRIORIDAD, ID_OPERADOR
+- Tabla ORDENES_PRODUCCION_ETAPAS: ID, ID_ORDEN, ID_ETAPA, ESTADO, CANTIDAD_PRODUCIDA, MERMAS, FECHA_INICIO_REAL, FECHA_FIN_REAL, OPERADOR_RESPONSABLE
+- Número de orden: formato "POP-XXXXX"
+- Stock comprometido: marcar insumos como "reservados" para esta orden
+- Cálculo de insumos necesarios: suma de insumos de todas las etapas * cantidad a producir
+- Transacción atómica: orden + etapas + compromiso de stock
+- Validar que proceso tiene al menos 1 etapa
+
+**Datos Involucrados:** IRQ-03 (Órdenes de Producción), IRQ-02 (Procesos - Etapas - Insumos), IRQ-01 (Productos como insumos)
+
+**Requisitos Funcionales:** RF-06, RF-23 (generar desde pedidos), OBJ-04 (Eficiencia productiva)
+
+---
+
+#### **UC-33: Modificar/cancelar orden de producción**
+
+**Actor Principal:** Administrador General, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Orden seleccionada existe en base de datos
+- Permiso de edición en módulo de Órdenes de Producción (RF-29)
+- Estado de orden es "pendiente" (NO se puede editar si está en ejecución)
+
+**Flujo Principal - Modificar:**
+1. Usuario selecciona una orden desde UC-31
+2. Usuario hace clic en botón "Editar"
+3. Sistema carga formulario con datos de la orden (solo si estado = "pendiente")
+4. Usuario puede modificar:
+   - Cantidad a producir (recalcula insumos necesarios)
+   - Fecha vencimiento
+   - Prioridad
+   - Operador responsable
+   - Observaciones
+5. Usuario hace clic en "Guardar Cambios"
+6. Sistema valida:
+   - Cantidad > 0
+   - Fecha vencimiento >= fecha inicio + tiempo total proceso
+   - Stock disponible para nuevos insumos si cambió cantidad
+7. Si validación correcta:
+   - Si cambió cantidad: recalcular stock comprometido de insumos
+   - Sistema actualiza registro ORDENES_PRODUCCION
+   - Sistema actualiza ORDENES_PRODUCCION_ETAPAS si aplica
+   - Sistema genera auditoría
+   - Sistema muestra "Cambios guardados exitosamente"
+8. Si validación falla, muestra errores
+
+**Flujo Principal - Cancelar:**
+1. Usuario selecciona una orden desde UC-31
+2. Usuario hace clic en botón "Cancelar Orden"
+3. Sistema presenta diálogo:
+   - Muestra número de orden, proceso, cantidad
+   - Valida estado: solo se puede cancelar si está "pendiente" o "en_proceso"
+   - Campo obligatorio: "Motivo de cancelación"
+4. Usuario ingresa motivo
+5. Usuario confirma cancelación
+6. Sistema valida:
+   - Si orden está en "en_proceso":
+     - Advertir: "Hay etapas en ejecución. ¿Confirma cancelación?"
+     - Listar etapas en progreso
+7. Si validación correcta:
+   - Sistema cambia estado a "cancelada"
+   - Sistema LIBERA stock comprometido de todos los insumos
+   - Sistema genera auditoría
+   - Sistema muestra confirmación
+8. Si validación falla, muestra advertencia
+
+**Flujos Alternativos:**
+- A1: Usuario intenta editar orden en ejecución:
+   - Sistema NO permite (muestra "Orden en ejecución no se puede editar. Solo permitidas etapas completadas")
+- A2: Usuario cancela en diálogo - retorna sin cambios
+- A3: Orden está en ejecución y cancela:
+   - Sistema marca todas las etapas como "canceladas"
+   - Libera stock de insumos no usados
+- A4: Hay venta/pedido asociado y cancela orden:
+   - Sistema advierte: "Hay pedido asociado. Cancele pedido también"
+
+**Consideraciones Técnicas:**
+- Solo editable si estado = "pendiente"
+- Auditar cambios: qué cantidad cambió, qué prioridad cambió
+- Si cambió cantidad: recalcular compromisos de stock
+- Al cancelar: liberar stock comprometido
+- Soft delete: cambiar estado, no eliminar registro
+- Mantener histórico para trazabilidad (OBJ-02)
+- Si hay etapas completadas: no permitir cancelación (solo marcar como "pausada")
+
+**Datos Involucrados:** IRQ-03 (Órdenes de Producción), IRQ-09 (Stock)
+
+**Requisitos Funcionales:** RF-06, RF-31
+
+---
+
+#### **UC-34: Registrar datos por etapa**
+
+**Actor Principal:** Operador de Producción, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Orden de producción en estado "pendiente" o "en_proceso"
+- Permiso de registro en módulo de Órdenes de Producción (RF-29)
+- Etapa actual está disponible para ejecutarse (etapas previas completadas)
+
+**Flujo Principal:**
+1. Usuario accede a una orden de producción desde UC-31
+2. Sistema muestra lista de etapas con estados y botones de acción
+3. Usuario selecciona una etapa "pendiente" para comenzar ejecución
+4. Usuario hace clic en "Iniciar Etapa"
+5. Sistema valida:
+   - Etapa está en orden secuencial correcto (etapas previas completadas)
+   - Orden está en "pendiente" o "en_proceso" (no cancelada, no completada)
+6. Si validación correcta:
+   - Sistema cambia estado etapa a "en_proceso"
+   - Sistema registra FECHA_INICIO_REAL (ahora)
+   - Sistema registra OPERADOR_RESPONSABLE (usuario actual)
+   - Sistema actualiza estado orden a "en_proceso"
+   - Sistema genera auditoría
+7. Durante ejecución de etapa:
+   - Operador puede hacer clic en "Registrar Avance" para registrar datos
+   - Sistema abre diálogo con campos:
+     - Cantidad producida hasta ahora (numérico)
+     - Cantidad defectuosa detectada (numérico)
+     - Mermas/Pérdidas (numérico)
+     - Observaciones del progreso
+     - Acciones correctivas realizadas (si aplica)
+8. Usuario completa campos y hace clic en "Guardar Avance"
+9. Sistema valida:
+   - Cantidad producida >= 0
+   - Cantidad defectuosa >= 0
+   - Mermas >= 0
+   - Total (producida + defectuosa + mermas) <= cantidad esperada de la etapa
+10. Si validación correcta:
+    - Sistema actualiza registro ORDENES_PRODUCCION_ETAPAS
+    - Sistema genera auditoría con timestamp
+    - Sistema muestra confirmación
+
+**Flujo Finalizar Etapa:**
+1. Cuando operador completa la etapa:
+   - Usuario hace clic en "Completar Etapa"
+   - Sistema abre diálogo:
+     - Cantidad final producida (numérico)
+     - Cantidad final defectuosa
+     - Mermas finales
+     - Tiempo real invertido (auto-calcula si tiene FECHA_INICIO_REAL y ahora)
+     - Observaciones finales
+2. Usuario completa campos y confirma
+3. Sistema valida:
+   - Cantidades coherentes
+   - Al menos cantidad mínima producida (validar contra estandar)
+4. Si validación correcta:
+   - Sistema cambia estado etapa a "completada"
+   - Sistema registra FECHA_FIN_REAL (ahora)
+   - Sistema DEDUCE stock de insumos:
+     - stock_actual -= insumos_consumidos
+     - stock_comprometido -= insumos_consumidos
+   - Sistema registra producción en stock:
+     - Si es etapa intermedia: stock de productos intermedios
+     - Si es última etapa: stock de productos finales
+   - Sistema genera auditoría con datos de producción
+   - Sistema calcula tiempo real vs estimado para análisis de eficiencia (RF-15)
+   - Si todas las etapas están completadas: cambiar estado orden a "completada"
+   - Sistema muestra confirmación
+
+**Flujos Alternativos:**
+- A1: Operador intenta iniciar etapa pero etapa previa no está completada:
+   - Sistema advierte: "Etapa anterior (XXX) aún no está completada"
+- A2: Usuario presiona "Pausar Etapa":
+   - Sistema pausa la etapa (estado = "pausada")
+   - Otro operador puede reanudar después
+- A3: Cantidad producida es menor a lo esperado:
+   - Sistema advierte: "Cantidad producida es menor a lo esperado. ¿Confirma?"
+- A4: Hay defectuosa > 10% de producida:
+   - Sistema alerta: "% de defectuosa es alto (XXX%). ¿Revisar?"
+
+**Consideraciones Técnicas:**
+- Tabla ORDENES_PRODUCCION_ETAPAS: agregar campos de control
+  - ESTADO: pendiente, en_proceso, pausada, completada, cancelada
+  - CANTIDAD_PRODUCIDA, CANTIDAD_DEFECTUOSA, MERMAS
+  - FECHA_INICIO_REAL, FECHA_FIN_REAL
+  - OPERADOR_RESPONSABLE
+  - TIEMPO_REAL_MINUTOS (se calcula al completar)
+- Auditar TODOS los cambios de estado de etapa
+- Al completar: deducir stock de insumos (BOM)
+- Al completar: agregar stock de productos producidos
+- Calcular eficiencia: (cantidad_producida / cantidad_esperada) * 100
+- Registrar desviaciones: tiempo real vs estimado, cantidad vs esperado
+- Mermas/defectuosa: crítico para OBJ-01 (pérdidas no justificadas)
+
+**Datos Involucrados:** IRQ-03 (Órdenes - Etapas), IRQ-02 (Procesos - Etapas), IRQ-09 (Stock), IRQ-15 (Indicadores)
+
+**Requisitos Funcionales:** RF-07 (resultados), RF-14 (tiempos reales), RF-15 (reportes eficiencia), OBJ-01 (Pérdidas), OBJ-02 (Trazabilidad)
+
+---
+
+#### **UC-35: Registrar resultados de orden de producción**
+
+**Actor Principal:** Asistente Administrativo, Administrador General
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Orden de producción en estado "completada" (todas las etapas finalizadas)
+- Permiso de registro en módulo de Órdenes de Producción (RF-29)
+
+**Flujo Principal:**
+1. Sistema detecta automáticamente cuando todas las etapas de una orden están completadas
+2. Sistema presenta notificación: "Orden POP-XXXXX completada. ¿Registrar resultados?"
+3. Usuario accede a la orden desde UC-31 o desde notificación
+4. Sistema abre vista de "Resumen de Resultados" con:
+   - Datos de la orden (proceso, cantidad solicitada)
+   - Tabla de etapas con resultados:
+     - Etapa, Cantidad esperada, Cantidad producida, Defectuosa, Mermas, Tiempo real vs estimado
+   - Resumen consolidado:
+     - Total producido
+     - Total defectuosa
+     - Total mermas
+     - % de eficiencia = (total_producido / cantidad_solicitada) * 100
+     - Desviación de tiempo = tiempo_real_total - tiempo_estimado_total
+5. Usuario puede revisar datos y agregar observaciones finales
+6. Usuario hace clic en "Registrar Resultados Finales"
+7. Sistema valida:
+   - Todas las etapas tienen datos completos
+   - Totales son coherentes
+8. Si validación correcta:
+   - Sistema crea registro en tabla RESULTADOS_ORDENES_PRODUCCION
+   - Sistema registra:
+     - ID_ORDEN
+     - CANTIDAD_SOLICITADA
+     - CANTIDAD_PRODUCIDA
+     - CANTIDAD_DEFECTUOSA
+     - MERMAS_TOTALES
+     - PORCENTAJE_EFICIENCIA
+     - DESVIACION_TIEMPO
+     - COSTO_REAL (basado en tiempo real y recursos usados, si está disponible)
+     - FECHA_REGISTRO
+     - OBSERVACIONES_FINALES
+   - Sistema calcula indicadores para OBJ-07 (Dashboard, RF-36):
+     - Eficiencia productiva
+     - Precisión de tiempos
+     - Tasa de defectuosa
+   - Sistema actualiza estado orden a "registrada"
+   - Sistema genera auditoría
+   - Si orden fue desde pedido (UC-22):
+     - Verificar si todos los items del pedido se han producido
+     - Si sí: actualizar estado pedido a "completado"
+   - Sistema muestra confirmación y resumen de resultados
+   - Sistema ofrece generar reporte de producción (RF-15)
+
+**Flujos Alternativos:**
+- A1: Usuario presiona "Cancelar" - retorna sin registrar resultados
+- A2: Hay datos inconsistentes:
+   - Sistema advierte: "Datos inconsistentes detectados. Revise etapa XXX"
+   - No permite registrar hasta corregir
+- A3: Eficiencia muy baja (< 70%):
+   - Sistema advierte: "Eficiencia muy baja. ¿Desea registrar de todas formas?"
+   - Usuario decide: confirmar / revisar datos / cancelar
+- A4: Hay múltiples órdenes para el mismo pedido:
+   - Sistema suma resultados: "Pedido requería XXX. Total producido: YYY"
+
+**Consideraciones Técnicas:**
+- Tabla RESULTADOS_ORDENES_PRODUCCION: registro inmutable de resultado final
+- No permitir modificaciones después de registrar (solo para auditoría)
+- Calcular indicadores:
+  - Eficiencia: cantidad_producida / cantidad_solicitada * 100
+  - Defectuosa%: cantidad_defectuosa / cantidad_producida * 100
+  - Mermas%: mermas_totales / cantidad_producida * 100
+  - Desviación tiempo: (tiempo_real - tiempo_estimado) / tiempo_estimado * 100
+- Registrar en tabla de histórico para análisis posterior (OBJ-07)
+- Estos datos alimentan el Dashboard y reportes (RF-36, RF-37)
+- Trazabilidad completa (OBJ-02): desde materia prima → proceso → orden → resultados → producto final
+
+**Datos Involucrados:** IRQ-03 (Órdenes de Producción), IRQ-15 (Indicadores/KPIs), IRQ-07 (Pedidos - vinculación)
+
+**Requisitos Funcionales:** RF-07 (Resultados), RF-15 (Reportes eficiencia), RF-36 (Dashboard), OBJ-02 (Trazabilidad), OBJ-04 (Eficiencia)
+
+---
+
+### MÓDULO COMPRAS
+
+#### **UC-36: Buscar compra**
+
+**Actor Principal:** Administrador General, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Al menos una compra registrada en la base de datos
+- Permiso de lectura en módulo de Compras (RF-29)
+
+**Flujo Principal:**
+1. Usuario accede al módulo de Compras desde el menú principal
+2. Sistema presenta pantalla de búsqueda con filtros disponibles
+3. Usuario ingresa criterios de búsqueda: número de orden de compra, proveedor, fecha, estado, rango de monto
+4. Usuario puede aplicar filtro "Compras pendientes" (checkbox) - muestra solo pendientes, parcialmente recibidas
+5. Usuario hace clic en botón "Buscar"
+6. Sistema valida que al menos un criterio esté completo
+7. Sistema ejecuta consulta en base de datos
+8. Sistema muestra tabla paginada (máximo 50 registros por página)
+9. Para cada compra muestra: número OC, proveedor, fecha, estado, cantidad items, monto total, estado de recepción
+10. Usuario puede seleccionar una compra para ver detalles, editar, registrar recepción, cancelar o consultar cuenta corriente del proveedor
+
+**Flujos Alternativos:**
+- A1: Si no hay resultados, sistema muestra mensaje "No se encontraron compras"
+- A2: Si búsqueda retorna más de 500, limita a primeros 500
+- A3: Usuario puede exportar resultados a Excel
+- A4: Usuario puede filtrar por estado de recepción (no recibida, parcial, completa)
+- A5: Usuario puede filtrar por estado de pago
+
+**Consideraciones Técnicas:**
+- Número de OC: único, auto-incrementado, formato "OC-XXXXX"
+- Estados: pendiente, parcialmente_recibida, recibida, cancelada
+- Búsqueda case-insensitive
+- Implementar índices en número OC, proveedor, fecha
+- Mostrar indicador visual si OC está vencida (fecha vencimiento < hoy)
+- Mostrar estado de recepción como badge
+- Vincular con cuenta corriente del proveedor (IRQ-10)
+
+**Datos Involucrados:** IRQ-05 (Información de Compras), IRQ-04 (Proveedores)
+
+**Requisitos Funcionales:** RF-10
+
+---
+
+#### **UC-37: Registrar compra**
+
+**Actor Principal:** Administrador General, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Permiso de creación en módulo de Compras (RF-29)
+- Proveedor seleccionado existe, está activo y no está bloqueado
+- Al menos un producto registrado y activo (puede ser insumo)
+
+**Flujo Principal:**
+1. Usuario accede a opción "Nueva Orden de Compra" desde módulo de Compras
+2. Sistema abre formulario con campos de IRQ-05
+3. Usuario completa datos generales:
+   - Proveedor (dropdown, búsqueda por nombre o CUIT)
+   - Fecha de orden (auto-rellena con hoy)
+   - Fecha de entrega solicitada (picker)
+   - Condición de pago (contado/crédito, hereda del proveedor)
+   - Plazo de pago si es crédito
+4. Usuario agrega items de compra (tabla):
+   - Producto/Insumo (dropdown, búsqueda, muestra si es insumo)
+   - Cantidad (número entero > 0)
+   - Precio unitario (propuesto por proveedor o ingresado)
+   - Descuento % (opcional)
+   - Subtotal (auto-calcula)
+5. Sistema calcula automático:
+   - Total items
+   - Subtotal
+   - Impuesto (si aplica, parametrizable)
+   - Monto total
+6. Usuario completa campos adicionales:
+   - Observaciones/Notas especiales
+   - Forma de pago requerida
+7. Usuario hace clic en "Guardar Orden de Compra"
+8. Sistema valida:
+   - Proveedor existe y está activo
+   - Al menos 1 item agregado
+   - Cantidades > 0
+   - Productos existen y están activos
+   - Precios > 0
+   - Fecha entrega >= fecha orden
+9. Si validación correcta:
+   - Sistema crea registro en tabla ORDENES_COMPRA (estado = "pendiente")
+   - Sistema crea registros en ORDENES_COMPRA_DETALLE (1 por item)
+   - Sistema genera número de OC único
+   - Sistema crea entrada en CUENTAS_CORRIENTES del proveedor (deuda si es crédito)
+   - Sistema registra en auditoría
+   - Sistema muestra "Orden de compra registrada exitosamente. Número: OC-XXXXX"
+   - Sistema ofrece generar/imprimir OC para enviar a proveedor
+   - Sistema retorna a lista con nueva OC visible
+10. Si validación falla, muestra errores
+
+**Flujos Alternativos:**
+- A1: Usuario cancela - retorna sin cambios
+- A2: Proveedor no tiene precio vigente para un insumo:
+   - Sistema permite ingresar precio manualmente
+   - Advierte: "Precio no tiene histórico para este proveedor"
+- A3: Usuario desea crear proveedor que no existe:
+   - Sistema ofrece crear desde aquí (diálogo rápido, UC-02 Proveedores)
+- A4: Usuario completa forma de pago como "Cheque":
+   - Sistema pregunta: "¿Cheque a nombre del proveedor XXX?"
+
+**Consideraciones Técnicas:**
+- Tabla ORDENES_COMPRA: ID, NUMERO, ID_PROVEEDOR, FECHA_ORDEN, FECHA_ENTREGA, ESTADO, CONDICION_PAGO, MONTO_TOTAL, OBSERVACIONES
+- Tabla ORDENES_COMPRA_DETALLE: ID, ID_ORDEN, ID_PRODUCTO, CANTIDAD, PRECIO_UNITARIO, DESCUENTO, SUBTOTAL
+- Número de OC: formato "OC-XXXXX"
+- Crear entrada en cuentas corrientes del proveedor (IRQ-10)
+- Si es contado: marcar como pendiente de pago
+- Si es crédito: registrar como deuda en cuenta corriente
+- Transacción atómica: OC + detalle + cuenta corriente
+
+**Datos Involucrados:** IRQ-05 (Compras), IRQ-04 (Proveedores), IRQ-01 (Productos como insumos), IRQ-10 (Cuentas Corrientes)
+
+**Requisitos Funcionales:** RF-10, RF-19 (crear cuenta corriente), OBJ-03 (Optimizar abastecimiento)
+
+---
+
+#### **UC-38: Modificar/cancelar compra**
+
+**Actor Principal:** Administrador General, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Compra seleccionada existe en base de datos
+- Permiso de edición en módulo de Compras (RF-29)
+- Estado de compra es "pendiente" (NO se puede editar si está recibida/cancelada)
+
+**Flujo Principal - Modificar:**
+1. Usuario selecciona una compra desde UC-36
+2. Usuario hace clic en botón "Editar"
+3. Sistema carga formulario con datos de la compra (solo si estado = "pendiente")
+4. Usuario puede modificar:
+   - Fecha de entrega solicitada
+   - Items de la compra:
+     - Cambiar cantidad
+     - Cambiar precio unitario
+     - Cambiar descuento
+     - Eliminar items
+     - Agregar nuevos items
+   - Observaciones
+5. Sistema actualiza automático: subtotal, monto total
+6. Usuario hace clic en "Guardar Cambios"
+7. Sistema valida:
+   - Al menos 1 item en compra
+   - Cantidades > 0
+   - Precios > 0
+   - Productos activos
+   - Fecha entrega >= hoy
+8. Si validación correcta:
+   - Sistema actualiza registro ORDENES_COMPRA
+   - Sistema actualiza registros ORDENES_COMPRA_DETALLE
+   - Si cambió monto total: actualizar CUENTAS_CORRIENTES del proveedor
+   - Sistema genera auditoría
+   - Sistema muestra "Cambios guardados exitosamente"
+9. Si validación falla, muestra errores
+
+**Flujo Principal - Cancelar:**
+1. Usuario selecciona una compra desde UC-36
+2. Usuario hace clic en botón "Cancelar Orden de Compra"
+3. Sistema presenta diálogo:
+   - Muestra número OC, proveedor, monto
+   - Solo permite si estado es "pendiente" o "parcialmente_recibida"
+   - Campo obligatorio: "Motivo de cancelación"
+4. Usuario ingresa motivo
+5. Usuario confirma cancelación
+6. Sistema valida:
+   - Si está "parcialmente_recibida":
+     - Advertir: "Hay mercadería recibida. ¿Confirma cancelación con devolución?"
+7. Si validación correcta:
+   - Sistema cambia estado a "cancelada"
+   - Sistema revierte movimiento en CUENTAS_CORRIENTES del proveedor
+   - Si fue parcialmente recibida: registrar nota sobre devolución pendiente
+   - Sistema genera auditoría
+   - Sistema muestra confirmación
+8. Si validación falla, muestra advertencia
+
+**Flujos Alternativos:**
+- A1: Usuario cancela en diálogo - retorna sin cambios
+- A2: Usuario intenta cambiar proveedor:
+   - Sistema NO permite (muestra "Proveedor no se puede cambiar")
+- A3: Hay mercadería recibida y cancela:
+   - Sistema registra nota: "Cancelada con XXX unidades recibidas. Requerir devolución"
+- A4: Hay pago asociado y cancela:
+   - Sistema advierte: "Hay pago registrado. Considere nota de crédito al proveedor"
+
+**Consideraciones Técnicas:**
+- Solo editable si estado = "pendiente"
+- Auditar cambios: qué items cambió, cantidades, precios
+- NO permitir cambiar proveedor
+- Si cancelar: revertir movimiento en cuentas corrientes
+- Soft delete: cambiar estado, no eliminar
+- Mantener histórico para trazabilidad
+
+**Datos Involucrados:** IRQ-05 (Compras), IRQ-10 (Cuentas Corrientes)
+
+**Requisitos Funcionales:** RF-10, RF-31
+
+---
+
+#### **UC-39: Registrar recepción de compra**
+
+**Actor Principal:** Asistente Administrativo, Administrador General
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Compra seleccionada existe en base de datos
+- Permiso de registro en módulo de Compras (RF-29)
+- Estado de compra es "pendiente" o "parcialmente_recibida" (NO completada o cancelada)
+
+**Flujo Principal:**
+1. Usuario accede a una compra desde UC-36
+2. Usuario hace clic en botón "Registrar Recepción"
+3. Sistema muestra tabla con items de la compra ordenada y cantidad pendiente por recibir
+4. Para cada item, usuario puede:
+   - Ingresar cantidad recibida (número entero <= cantidad pendiente)
+   - Ingresar cantidad rechazada/defectuosa (opcional)
+   - Ingresar observaciones del item (ej: "3 unidades dañadas al recibir")
+5. Usuario puede recibir parcialmente (algunos items) o completamente (todos)
+6. Usuario hace clic en "Confirmar Recepción"
+7. Sistema valida:
+   - Al menos 1 item con cantidad recibida > 0
+   - Cantidad recibida <= cantidad ordenada por item
+   - Cantidad recibida + rechazada <= cantidad ordenada
+8. Si validación correcta:
+   - Sistema crea registro en tabla RECEPCION_COMPRA con los datos
+   - Para cada item recibido:
+     - INGRESA stock: stock_actual += cantidad_recibida (RF-11, RF-02)
+     - Si hay rechazada: crea movimiento de rechazo (nota en observaciones)
+     - Registra precio unitario pagado vs precio de lista (para análisis)
+   - Sistema actualiza estado ORDENES_COMPRA:
+     - Si recibió todas cantidades: "recibida"
+     - Si recibió parcialmente: "parcialmente_recibida"
+   - Sistema actualiza CUENTAS_CORRIENTES del proveedor:
+     - Monto a pagar = monto total de OC (no cambia por rechazadas)
+   - Sistema crea movimiento de stock (IRQ-09): registro de ingreso con fecha, hora, usuario, número de OC
+   - Sistema genera registro en auditoría
+   - Si hay rechazadas:
+     - Sistema crea tarea: "Coordinar devolución de mercadería rechazada de OC-XXXXX"
+     - Sistema notifica al administrador
+   - Sistema muestra confirmación con resumen de lo recibido
+9. Si validación falla, muestra errores
+
+**Flujos Alternativos:**
+- A1: Usuario presiona "Cancelar" - retorna sin registrar recepción
+- A2: Cantidad recibida < cantidad ordenada y NO hay más recepciones pendientes:
+   - Sistema advierte: "Falta recibir XXX unidades. ¿Cerrar OC de todas formas?"
+   - Usuario decide: cerrar / esperar más recepciones
+- A3: Usuario rechaza cantidades significativas (>20%):
+   - Sistema alerta: "% de rechazo es alto. ¿Desea notificar al proveedor?"
+- A4: Usuario intenta recibir más de lo ordenado:
+   - Sistema NO permite: "No puede recibir más de lo ordenado (XXX unidades)"
+- A5: Hay diferencia de precio:
+   - Sistema advierte: "Precio unitario entregado es diferente al de OC. ¿Registra de todas formas?"
+
+**Consideraciones Técnicas:**
+- Tabla RECEPCION_COMPRA: ID, ID_ORDEN_COMPRA, FECHA_RECEPCION, USUARIO, CANTIDAD_RECIBIDA, CANTIDAD_RECHAZADA, OBSERVACIONES
+- Tabla MOVIMIENTOS_STOCK: registra ingreso con trazabilidad (fecha, usuario, número OC, número lote, vencimiento si aplica)
+- Ingresar stock: stock_actual += cantidad_recibida
+- Crear tarea si hay rechazadas (para seguimiento)
+- Registrar diferencia de precio (análisis de desempeño proveedor)
+- Auditar completamente: quién, cuándo, qué cantidades
+- Si rechaza: mantener constancia para cálculo de indicadores de calidad del proveedor (RF-13)
+- Transacción atómica: recepción + ingreso de stock + actualización OC
+
+**Datos Involucrados:** IRQ-05 (Compras), IRQ-09 (Stock), IRQ-10 (Cuentas Corrientes - Proveedores), IRQ-04 (Proveedores - para evaluación)
+
+**Requisitos Funcionales:** RF-11 (Recepción de compras), RF-02 (Ingreso de stock), RF-13 (Desempeño proveedores), OBJ-03 (Abastecimiento)
+
+---
+
+### MÓDULO CUENTAS CORRIENTES
+
+#### **UC-40: Consultar cuenta corriente proveedor**
+
+**Actor Principal:** Administrador General, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Proveedor seleccionado existe en base de datos
+- Permiso de lectura en módulo de Cuentas Corrientes (RF-29)
+
+**Flujo Principal:**
+1. Usuario accede a módulo de Cuentas Corrientes o desde consulta de proveedor (UC-03)
+2. Usuario selecciona proveedor (búsqueda o dropdown)
+3. Sistema carga y muestra:
+   - Datos del proveedor (nombre, CUIT, contacto)
+   - Saldo actual (deuda/crédito)
+   - Fecha de último movimiento
+   - Plazo de pago pactado
+   - Límite de crédito (si aplica)
+   - Tabla de movimientos: fecha, concepto, monto debe, monto haber, saldo
+   - Filtros: rango de fechas, tipo de movimiento (compra, pago, ajuste)
+4. Usuario puede exportar estado de cuenta a PDF/Excel
+5. Usuario puede generar reporte de antigüedad de deuda
+
+**Consideraciones Técnicas:**
+- Saldo = suma de débitos - suma de créditos
+- Movimientos ordenados por fecha descendente
+- Mostrar indicador si hay deuda vencida
+
+**Requisitos Funcionales:** RF-21
+
+---
+
+#### **UC-41: Consultar cuenta corriente cliente**
+
+**Actor Principal:** Administrador General, Asistente Administrativo, Vendedor
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Cliente seleccionado existe en base de datos
+- Permiso de lectura en módulo de Cuentas Corrientes (RF-29)
+
+**Flujo Principal:**
+1. Usuario accede a módulo de Cuentas Corrientes o desde consulta de cliente (UC-07)
+2. Usuario selecciona cliente (búsqueda o dropdown)
+3. Sistema carga y muestra:
+   - Datos del cliente (nombre, CUIT, contacto)
+   - Saldo actual (deuda/acreedor)
+   - Crédito utilizado vs límite disponible
+   - Fecha de último movimiento
+   - Tabla de movimientos: fecha, concepto, monto debe, monto haber, saldo
+   - Filtros: rango de fechas, tipo de movimiento (venta, pago, ajuste)
+4. Usuario puede registrar pago directamente (UC-30)
+5. Usuario puede exportar estado de cuenta a PDF/Excel
+6. Usuario puede generar reporte de antigüedad de deuda
+7. Si hay deuda vencida, sistema muestra alerta con monto
+
+**Consideraciones Técnicas:**
+- Saldo = suma de débitos - suma de créditos
+- Movimientos ordenados por fecha descendente
+- Mostrar indicador visual si hay mora
+
+**Requisitos Funcionales:** RF-21
+
+---
+
+### MÓDULO STOCK
+
+#### **UC-42: Registrar movimiento en stock**
+
+**Actor Principal:** Asistente Administrativo, Operador de Producción
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Permiso de registro en módulo de Stock (RF-29)
+- Producto seleccionado existe y está activo
+- Tipo de movimiento válido
+
+**Flujo Principal:**
+1. Usuario accede a opción "Registrar Movimiento de Stock" desde módulo de Stock
+2. Sistema abre formulario con campos:
+   - Tipo de movimiento (dropdown): ingreso, egreso, ajuste, transferencia
+   - Producto (dropdown con búsqueda)
+   - Cantidad (número entero)
+   - Ubicación/Depósito origen
+   - Ubicación/Depósito destino (si es transferencia)
+   - Motivo (dropdown: compra recibida, producción, venta, ajuste por inventario, devolución, merma, etc.)
+   - Documento asociado (número OC, número pedido, número orden producción, etc.)
+   - Observaciones
+3. Usuario completa campos y hace clic en "Guardar"
+4. Sistema valida:
+   - Producto existe y activo
+   - Cantidad > 0
+   - Tipo movimiento válido
+   - Para egreso: stock disponible >= cantidad
+   - Ubicaciones válidas
+5. Si validación correcta:
+   - Sistema crea registro en MOVIMIENTOS_STOCK
+   - Sistema actualiza STOCK:
+     - Ingreso: stock_actual += cantidad
+     - Egreso: stock_actual -= cantidad
+     - Transferencia: resta de origen, suma a destino
+   - Sistema registra: fecha, hora, usuario, tipo, cantidad, saldo resultante
+   - Sistema genera auditoría
+   - Sistema muestra confirmación
+6. Si validación falla, muestra errores
+
+**Consideraciones Técnicas:**
+- Tabla MOVIMIENTOS_STOCK: ID, ID_PRODUCTO, TIPO, CANTIDAD, UBICACION_ORIGEN, UBICACION_DESTINO, MOTIVO, DOCUMENTO_ASOCIADO, FECHA, USUARIO, SALDO_ANTERIOR, SALDO_POSTERIOR
+- Cada movimiento debe ser trazable (RF-02)
+- Validar disponibilidad para egresos
+- Registrar saldo anterior y posterior para auditoría
+
+**Requisitos Funcionales:** RF-01, RF-02
+
+---
+
+#### **UC-43: Consultar estado de stock**
+
+**Actor Principal:** Administrador General, Asistente Administrativo, Operador de Producción, Vendedor
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Al menos un producto registrado
+- Permiso de lectura en módulo de Stock (RF-29)
+
+**Flujo Principal:**
+1. Usuario accede al módulo de Stock desde menú principal
+2. Sistema presenta pantalla de búsqueda/consulta
+3. Usuario ingresa criterios: producto, categoría, ubicación, estado stock (bajo, normal, alto)
+4. Usuario hace clic en "Consultar"
+5. Sistema muestra tabla con:
+   - Código producto, nombre
+   - Stock actual
+   - Stock comprometido (pedidos pendientes)
+   - Stock disponible (actual - comprometido)
+   - Cantidad mínima recomendada
+   - Cantidad máxima recomendada
+   - Indicador visual: rojo si < mínima, verde si normal, naranja si > máxima
+   - Última fecha de movimiento
+6. Usuario puede:
+   - Hacer clic en producto para ver historial de movimientos
+   - Ver ubicaciones del producto
+   - Exportar reporte
+   - Registrar movimiento si necesario (UC-42)
+
+**Consideraciones Técnicas:**
+- Stock disponible = stock_actual - stock_comprometido
+- Mostrar indicadores de alerta si stock está fuera de rango
+- Historial de movimientos últimos 30 días disponible
+- Implementar índices para búsqueda rápida
+
+**Requisitos Funcionales:** RF-02
+
+---
+
+### MÓDULO REPORTES
+
+#### **UC-44: Generar reportes de eficiencia productiva**
+
+**Actor Principal:** Administrador General, Asistente Administrativo
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Permiso de lectura en módulo de Reportes (RF-29)
+- Hay datos de órdenes de producción completadas
+
+**Flujo Principal:**
+1. Usuario accede a opción "Reportes de Eficiencia Productiva" desde módulo
+2. Sistema presenta opciones de reporte:
+   - Por período (mes, trimestre, año)
+   - Por proceso productivo
+   - Por operador
+3. Usuario selecciona filtros y período
+4. Usuario hace clic en "Generar Reporte"
+5. Sistema consolida datos de RESULTADOS_ORDENES_PRODUCCION:
+   - Total órdenes ejecutadas
+   - Cantidad total producida vs solicitada
+   - % de eficiencia promedio
+   - Tasa de defectuosa
+   - Desviación de tiempos
+   - Mermas totales
+6. Sistema muestra reporte en pantalla con gráficos
+7. Usuario puede:
+   - Exportar a PDF, Excel
+   - Enviar por email
+   - Imprimir
+   - Descargar datos
+
+**Requisitos Funcionales:** RF-15, RF-37, OBJ-07
+
+---
+
+### MÓDULO SERVICIOS TERCERIZADOS
+
+#### **UC-45 a UC-49: Gestión de Servicios Tercerizados**
+
+Operaciones CRUD similares a Proveedores:
+- **UC-45:** Buscar servicio (código, nombre, proveedor, estado)
+- **UC-46:** Registrar servicio (nombre, descripción, costo unitario, proveedor, estado)
+- **UC-47:** Modificar servicio (campos editables excepto código)
+- **UC-48:** Anular/Habilitar servicio (cambio de estado con motivo)
+- **UC-49:** Asignar servicio a orden de producción (seleccionar etapa, servicio, cantidad, registrar gasto)
+
+**Requisitos Funcionales:** RF-24, RF-25, RF-26, RF-27
+
+---
+
+### MÓDULO SEGURIDAD Y USUARIOS
+
+#### **UC-50 a UC-55: Gestión de Usuarios, Roles y Seguridad**
+
+Operaciones CRUD y de control:
+- **UC-50:** Buscar usuario (nombre, email, rol, estado)
+- **UC-51:** Registrar usuario (nombre, email, contraseña, rol, departamento)
+- **UC-52:** Modificar usuario (campos editables)
+- **UC-53:** Habilitar/Deshabilitar usuario (cambio de estado)
+- **UC-54:** Gestionar Roles y Permisos (crear roles, asignar permisos granulares por RF)
+- **UC-55:** Consultar Historial de Auditoría (búsqueda de eventos por usuario, tipo, fecha, entidad, cambios)
+
+**Consideraciones:**
+- Contraseñas almacenadas con hash criptográfico
+- Permisos granulares por Requisito Funcional
+- Auditoría completa de acciones críticas
+- Historial no modificable (inmutable)
+
+**Requisitos Funcionales:** RF-28, RF-29, RF-30, RF-31, RF-32
+
+---
+
+### MÓDULO CONFIGURACIÓN
+
+#### **UC-56 a UC-59: Gestión de Configuración Global**
+
+- **UC-56:** Gestionar Configuración Global (lista de parámetros: impuestos, formas de pago, categorías, unidades medida, etc.)
+- **UC-57:** Modificar Parámetros (editar valores de configuración parametrizable sin tocar código)
+- **UC-58:** Gestionar Zonas de Trabajo (crear/editar depósitos, líneas de producción, ubicaciones)
+- **UC-59:** Restaurar Parámetros (volver a valores por defecto)
+
+**Consideraciones:**
+- Todos los parámetros deben ser modificables sin cambiar código (OBJ-09)
+- Cambios se aplican inmediatamente
+- Historial de cambios de configuración en auditoría
+
+**Requisitos Funcionales:** RF-33, RF-34, RF-35
+
+---
+
+### MÓDULO DASHBOARD Y AYUDA
+
+#### **UC-60: Consultar Tablero de Control (Dashboard)**
+
+**Actor Principal:** Todos los actores
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Permiso de lectura en módulo (RF-29)
+
+**Flujo Principal:**
+1. Usuario accede al Dashboard desde menú principal o al ingresar
+2. Sistema muestra widgets de indicadores clave:
+   - Órdenes de producción en ejecución (cantidad, % avance)
+   - Pedidos pendientes de entrega (cantidad, próximos a vencer)
+   - Stock bajo (productos alertas)
+   - Deuda clientes (total, vencida)
+   - Deuda proveedores (total, próxima a vencer)
+   - Indicadores de eficiencia productiva (últimos 7 días)
+   - Compras pendientes de recibir
+3. Cada widget es clickeable para acceder a detalles
+4. Usuario puede personalizar qué widgets mostrar (si está disponible)
+
+**Requisitos Funcionales:** RF-36, OBJ-07
+
+---
+
+#### **UC-61: Exportar Reportes Gerenciales**
+
+**Actor Principal:** Administrador General
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+- Permiso de exportación (RF-29)
+
+**Flujo Principal:**
+1. Usuario selecciona "Exportar Reporte Gerencial"
+2. Sistema presenta opciones: resumen ejecutivo, detalle completo, período
+3. Usuario selecciona formato: PDF, Excel, CSV
+4. Sistema genera reporte consolidando:
+   - Estado general del negocio
+   - Indicadores de producción
+   - Estado de cuentas corrientes
+   - Análisis de stock
+5. Usuario descarga o recibe por email
+
+**Requisitos Funcionales:** RF-37, OBJ-07
+
+---
+
+#### **UC-62: Consultar Ayuda Contextual**
+
+**Actor Principal:** Todos los actores
+
+**Precondiciones:**
+- Usuario autenticado en el sistema
+
+**Flujo Principal:**
+1. Usuario hace clic en botón "?" en cualquier pantalla
+2. Sistema muestra ayuda contextual específica para esa operación
+3. Usuario puede:
+   - Ver video tutorial (si está disponible)
+   - Ver guía de usuario
+   - Ver FAQ
+   - Contactar soporte
+
+**Requisitos Funcionales:** RF-38, OBJ-10
+
+---
+- **ACT-02: Asistente Administrativo** - Personal de apoyo administrativo
+- **ACT-03: Operador de Producción** - Personal responsable de procesos productivos
+- **ACT-04: Vendedor** - Personal encargado de ventas y atención al cliente
+
+---
+
+## REQUISITOS NO FUNCIONALES (NFR)
+
+### NFR-01: Copias de Seguridad
+El sistema incorpora mecanismo para realizar copias de seguridad de datos almacenados.
+
+### NFR-02: Disponibilidad
+El sistema debe estar disponible el 95% del tiempo durante horas de operación.
+
+### NFR-03: Exportación de Datos
+El sistema debe exportar datos en formatos estándar (Excel, CSV) para análisis y respaldo externo.
+- NO hay integración con sistemas contables o de facturación
+- Los datos exportados son solo para consulta y análisis
+
+### NFR-04: Rendimiento
+- Consultas rutinarias: máximo 3 segundos
+- Reportes complejos: cotas específicas por RF
+
+### NFR-05: Cifrado de Credenciales
+Credenciales almacenadas con algoritmos de hash criptográficos robustos, nunca en texto plano.
+
+### NFR-06: Integridad de Auditoría
+Registros de auditoría no pueden ser modificados ni eliminados desde interfaz de usuario.
+
+### NFR-07: Escalabilidad de Configuración
+Arquitectura permite incorporar nuevos parámetros sin cambios estructurales en código.
+
+### NFR-08: Consistencia de Interfaz y Usabilidad
+- Consistencia visual en todas pantallas
+- Operaciones frecuentes máximo 3 clics desde menú principal
+
+### NFR-09: Protección de Datos Personales
+Cumplimiento de normativas de protección de datos, acceso restringido por roles autorizados.
+
+---
+
+## GLOSARIO DE TÉRMINOS
+
+### Conceptos Operacionales
+- **Producto:** Artículo tangible que se gestiona (insumos, intermedios, terminados)
+- **Lote:** Agrupación de unidades de producto con trazabilidad
+- **Depósito:** Ubicación física o lógica de almacenamiento
+- **Movimiento de Stock:** Registro de ingreso, egreso, ajuste o transferencia
+- **Stock Comprometido:** Cantidad en pedidos pero aún no entregada
+- **Stock Disponible:** Stock actual menos stock comprometido
+
+### Entidades Externas
+- **Proveedor:** Abastecedor de insumos o servicios
+- **Cliente:** Solicitante de productos/servicios
+- **Servicio Tercerizado:** Labor contratada a proveedor externo
+
+### Procesos Productivos
+- **Proceso Productivo:** Definición estandarizada de transformación de insumos
+- **Etapa:** Fase individual dentro de un proceso
+- **Orden de Producción:** Ejecución real de un proceso
+
+### Documentos y Transacciones
+- **Orden de Compra:** Solicitud formal a proveedor
+- **Recepción de Compra:** Validación e ingreso de mercadería
+- **Pedido:** Solicitud de cliente previa a venta
+- **Venta:** Transacción comercial confirmada
+- **Cuenta Corriente:** Registro financiero (deuda/crédito)
+- **Pago:** Transferencia de valor monetario
+
+### Seguridad y Control
+- **Usuario:** Identidad digital en el sistema
+- **Rol:** Agrupación de permisos
+- **Permiso:** Autorización granular por funcionalidad
+- **Registro de Auditoría:** Entrada inmutable de acciones críticas
+- **Parámetro de Configuración:** Variable global modificable
+
+### Métricas y Reportes
+- **KPI (Indicador):** Métrica de desempeño
+- **Tablero de Control:** Visualización de indicadores
+- **Reporte:** Documento de análisis exportable
+
+---
+
+## MATRIZ DE RASTREABILIDAD OBJETIVOS-REQUISITOS
+
+| Objetivo | IRQ | RF | UC |
+|----------|-----|----|----|
+| OBJ-01 | IRQ-09 | RF-01,02,03,22 | UC-42,43 |
+| OBJ-02 | IRQ-01,02,03,09 | RF-04,05,06,07,08,14,15,23 | UC-09-20,34,35 |
+| OBJ-03 | IRQ-04,05 | RF-09,10,11,12,13 | UC-01-04,36-39 |
+| OBJ-04 | IRQ-02,03 | RF-05,06,07,14,15 | UC-13-20,34,35 |
+| OBJ-05 | IRQ-06,07,08,10 | RF-16,17,18,19,20,21 | UC-05-08,21-30,40,41 |
+| OBJ-06 | IRQ-11,04 | RF-24,25,26,27 | UC-45-49 |
+| OBJ-07 | IRQ-15 | RF-36,37 | UC-60,61 |
+| OBJ-08 | IRQ-12,14 | RF-28,29,30,31,32 | UC-50-55 |
+| OBJ-09 | IRQ-13 | RF-33,34,35 | UC-56-59 |
+| OBJ-10 | Todos | RF-38 | UC-62 |
+| OBJ-11 | Todos | Todos | Todos |
+
+---
+
+## NOTAS DE IMPLEMENTACIÓN
+
+### Principios de Diseño
+1. **Parametrizable:** Todo debe ser configurable sin hardcoding
+2. **Modular:** Cada submódulo independiente pero integrado
+3. **Auditable:** Todas acciones críticas registradas
+4. **Escalable:** Soportar crecimiento sin rediseño
+5. **Usable:** Interfaz intuitiva para usuarios sin capacitación extensiva
+
+### Prioridades de Implementación
+**Fase 1 (Crítica):** Módulos de Productos, Stock, Procesos, Órdenes de Producción  
+**Fase 2 (Alta):** Clientes, Pedidos, Ventas, Cuentas Corrientes  
+**Fase 3 (Media):** Proveedores, Compras, Servicios Tercerizados  
+**Fase 4 (Baja):** Reportes, Dashboard, Auditoría, Configuración Avanzada
+
+---
+
+**Documento completado y listo para implementación.**

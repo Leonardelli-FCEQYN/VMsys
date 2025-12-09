@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.unam.mvmsys.controller.comercial.VincularProductoController" prefHeight="760.0" prefWidth="1100.0" style="-fx-background-color: #F9FAFB;">
+   <top>
+      <VBox spacing="0.0" style="-fx-padding: 20px;">
+         <children>
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+               <children>
+                  <VBox spacing="4.0">
+                     <children>
+                        <Label fx:id="lblTitulo" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #991b1b;" text="Vincular Producto/Servicio" />
+                        <Label fx:id="lblSubtitulo" style="-fx-font-size: 13px; -fx-text-fill: #6B7280;" text="Seleccione un producto para vincular" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <VBox styleClass="card" style="-fx-padding: 20px; -fx-margin: 0 20 0 20;">
+         <children>
+            <!-- Búsqueda de productos -->
+            <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #374151; -fx-padding: 0 0 10 0;" text="Buscar Producto/Servicio" />
+            
+            <HBox spacing="10.0" VBox.vgrow="NEVER" style="-fx-padding: 0 0 15 0;">
+               <children>
+                  <TextField fx:id="txtBusqueda" promptText="Buscar por nombre, código..." HBox.hgrow="ALWAYS" />
+                  <Button mnemonicParsing="false" onAction="#accionBuscar" prefHeight="40.0" styleClass="btn-primary" style="-fx-background-color: #6B7280; -fx-text-fill: white; -fx-font-weight: 600; -fx-padding: 0 20;" text="🔍 Buscar" />
+               </children>
+            </HBox>
+            
+            <!-- Tabla de productos disponibles -->
+            <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #374151; -fx-padding: 10 0 10 0;" text="Productos Disponibles" />
+            
+            <TableView fx:id="tblProductos" prefHeight="400.0" VBox.vgrow="SOMETIMES" style="-fx-font-size: 11px;" styleClass="tabla-vinculacion">
+               <columns>
+                  <TableColumn fx:id="colCodigo" prefWidth="110.0" text="Código" />
+                  <TableColumn fx:id="colNombre" prefWidth="280.0" text="Nombre" />
+                  <TableColumn fx:id="colCategoria" prefWidth="150.0" text="Categoría" />
+                  <TableColumn fx:id="colObservacion" prefWidth="320.0" text="Observación" />
+                  <TableColumn fx:id="colSeleccionar" prefWidth="120.0" style="-fx-alignment: CENTER;" text="✓" />
+               </columns>
+            </TableView>
+            
+            <!-- Datos de vinculación -->
+            <Label style="-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #374151; -fx-padding: 20 0 10 0;" text="Datos de Vinculación" />
+            
+            <GridPane hgap="15.0" vgap="12.0" style="-fx-padding: 0 0 15 0;">
+              <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="50.0" />
+                <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="50.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <VBox spacing="6.0" fx:id="vboxCampo1" visible="false" managed="false">
+                     <children>
+                        <Label fx:id="lblCampo1" styleClass="label-form" text="Precio de Compra" />
+                        <TextField fx:id="txtCampo1" promptText="0.00" style="-fx-font-size: 12px;" />
+                     </children>
+                  </VBox>
+                  <VBox spacing="6.0" GridPane.columnIndex="1" fx:id="vboxCampo2" visible="false" managed="false">
+                     <children>
+                        <Label fx:id="lblCampo2" styleClass="label-form" text="Observaciones" />
+                        <TextField fx:id="txtCampo2" promptText="Notas adicionales..." style="-fx-font-size: 12px;" />
+                     </children>
+                  </VBox>
+               </children>
+            </GridPane>
+            
+            <Label fx:id="lblProductoSeleccionado" style="-fx-font-size: 12px; -fx-text-fill: #059669; -fx-font-weight: 600; -fx-padding: 10 0 0 0;" text="" />
+         </children>
+      </VBox>
+   </center>
+   <bottom>
+      <HBox spacing="10.0" style="-fx-padding: 15px 20px; -fx-alignment: CENTER_RIGHT;">
+         <children>
+            <Button mnemonicParsing="false" onAction="#accionCancelar" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: white; -fx-text-fill: #374151; -fx-font-weight: 600; -fx-border-color: #D1D5DB; -fx-border-width: 1.5; -fx-border-radius: 4; -fx-background-radius: 4;" text="Cancelar" />
+            <Button mnemonicParsing="false" onAction="#accionVincular" prefHeight="40.0" prefWidth="120.0" styleClass="btn-primary" style="-fx-background-color: #991b1b; -fx-text-fill: white; -fx-font-weight: 600;" text="Vincular" />
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>

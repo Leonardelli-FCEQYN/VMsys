@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.Color?>
+
+<VBox fx:id="vboxRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="800.0" spacing="12" style="-fx-padding: 16; -fx-background-color: #F9FAFB;" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.unam.mvmsys.controller.configuracion.ConfiguracionController">
+    <padding>
+        <Insets bottom="16" left="16" right="16" top="16" />
+    </padding>
+
+    <!-- HEADER -->
+    <Label text="Configuración del Sistema" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #111827;" />
+    <Separator />
+
+    <!-- TABS -->
+    <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE">
+
+        <!-- TAB: CATEGORÍAS DE CLIENTES -->
+        <Tab fx:id="tabCategorias" text="Categorías de Clientes">
+            <VBox fx:id="vboxCategorias" spacing="12" style="-fx-padding: 12;">
+                <padding>
+                    <Insets bottom="12" left="12" right="12" top="12" />
+                </padding>
+
+                <!-- TOOLBAR -->
+                <HBox spacing="8" style="-fx-alignment: CENTER_LEFT;">
+                    <TextField fx:id="txtBusquedaCategoria" promptText="Buscar por nombre..." style="-fx-font-size: 12; -fx-padding: 8;" HBox.hgrow="ALWAYS" />
+                    <Button onAction="#accionNuevaCategoria" text="➕ Nueva Categoría" style="-fx-font-size: 12; -fx-padding: 8 16; -fx-border-color: #10B981; -fx-border-width: 2; -fx-border-radius: 4; -fx-background-color: #F0FDF4; -fx-text-fill: #10B981; -fx-cursor: hand;" />
+                </HBox>
+
+                <!-- TABLA DE CATEGORÍAS -->
+                <TableView fx:id="tblCategorias" prefHeight="300" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colNombreCategoria" prefWidth="150" text="Nombre" />
+                        <TableColumn fx:id="colDescripcionCategoria" prefWidth="200" text="Descripción" />
+                        <TableColumn fx:id="colIconoCategoria" prefWidth="80" text="Icono" />
+                        <TableColumn fx:id="colColorCategoria" prefWidth="100" text="Color" />
+                        <TableColumn fx:id="colActivaCategoria" prefWidth="80" text="Activa" />
+                        <TableColumn fx:id="colAccionesCategoria" prefWidth="150" text="Acciones" />
+                    </columns>
+                </TableView>
+
+                <!-- FORMULARIO DE CATEGORÍA -->
+                <VBox fx:id="vboxFormularioCategoria" spacing="12" style="-fx-border-color: #E5E7EB; -fx-border-width: 1; -fx-border-radius: 6; -fx-background-color: #FFFFFF; -fx-padding: 16;" visible="false" managed="false">
+                    <padding>
+                        <Insets bottom="16" left="16" right="16" top="16" />
+                    </padding>
+
+                    <!-- TÍTULO DEL FORMULARIO -->
+                    <Label fx:id="lblTituloCategoria" text="Nueva Categoría de Cliente" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #111827;" />
+
+                    <!-- GRID DE CAMPOS -->
+                    <GridPane hgap="12" vgap="12">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="150" />
+                            <ColumnConstraints hgrow="ALWAYS" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="150" />
+                        </columnConstraints>
+
+                        <!-- Nombre -->
+                        <Label text="Nombre *" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="txtNombreCategoria" promptText="Ej: Mayorista" style="-fx-font-size: 12; -fx-padding: 8;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                        <!-- Icono -->
+                        <Label text="Icono" style="-fx-font-weight: bold;" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                        <TextField fx:id="txtIconoCategoria" promptText="Ej: 👑" style="-fx-font-size: 12; -fx-padding: 8;" GridPane.columnIndex="2" GridPane.rowIndex="0" HBox.hgrow="ALWAYS" />
+
+                        <!-- Descripción -->
+                        <Label text="Descripción" style="-fx-font-weight: bold; -fx-alignment: TOP_LEFT;" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextArea fx:id="txtDescripcionCategoria" prefRowCount="3" promptText="Descripción de la categoría..." style="-fx-font-size: 12; -fx-padding: 8;" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+
+                        <!-- Color Hex -->
+                        <Label text="Color" style="-fx-font-weight: bold;" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <ColorPicker fx:id="colorPickerCategoria" style="-fx-padding: 4;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                        <!-- Activa -->
+                        <HBox spacing="8" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                            <CheckBox fx:id="chkActivaCategoria" text="Activa" />
+                        </HBox>
+                    </GridPane>
+
+                    <!-- BOTONES DE ACCIÓN -->
+                    <HBox spacing="8" style="-fx-alignment: CENTER_RIGHT;">
+                        <Button fx:id="btnGuardarCategoria" onAction="#accionGuardarCategoria" text="💾 Guardar" style="-fx-font-size: 12; -fx-padding: 8 16; -fx-border-color: #10B981; -fx-border-width: 2; -fx-border-radius: 4; -fx-background-color: #F0FDF4; -fx-text-fill: #10B981; -fx-cursor: hand;" />
+                        <Button fx:id="btnCancelarCategoria" onAction="#accionCancelarCategoria" text="❌ Cancelar" style="-fx-font-size: 12; -fx-padding: 8 16; -fx-border-color: #EF4444; -fx-border-width: 2; -fx-border-radius: 4; -fx-background-color: #FEF2F2; -fx-text-fill: #EF4444; -fx-cursor: hand;" />
+                    </HBox>
+                </VBox>
+
+            </VBox>
+        </Tab>
+
+    </TabPane>
+</VBox>
