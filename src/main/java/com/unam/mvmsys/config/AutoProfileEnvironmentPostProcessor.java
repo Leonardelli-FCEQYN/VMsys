@@ -14,7 +14,7 @@ public class AutoProfileEnvironmentPostProcessor implements EnvironmentPostProce
 
     // Configuración de tu servidor remoto (Prod)
     private static final String REMOTE_HOST = "localhost"; // Cambiar por IP real en prod
-    private static final int REMOTE_PORT = 5432;
+    private static final int REMOTE_PORT = 9999;
     private static final int TIMEOUT_MS = 2000; // 2 segundos máximo para decidir
 
     @Override

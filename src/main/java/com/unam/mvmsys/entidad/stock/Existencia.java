@@ -1,14 +1,14 @@
 package com.unam.mvmsys.entidad.stock;
 
+import com.unam.mvmsys.entidad.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 
-import com.unam.mvmsys.entidad.base.BaseEntity;
-
 @Entity
 @Table(name = "existencias")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor @Builder
 public class Existencia extends BaseEntity {
 
     @ManyToOne(optional = false)
@@ -19,6 +19,6 @@ public class Existencia extends BaseEntity {
     @JoinColumn(name = "deposito_id", nullable = false)
     private Deposito deposito;
 
-    @Column(nullable = false, precision = 15, scale = 3)
+    @Column(nullable = false, precision = 12, scale = 3)
     private BigDecimal cantidad;
 }

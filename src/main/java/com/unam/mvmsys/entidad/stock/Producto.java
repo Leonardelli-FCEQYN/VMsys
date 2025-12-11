@@ -20,6 +20,10 @@ public class Producto extends BaseEntity {
     @Column(nullable = false, length = 150)
     private String nombre;
 
+    // --- NUEVO CAMPO: MARCA (Análisis Funcional) ---
+    @Column(length = 100)
+    private String marca;
+
     @Column(columnDefinition = "TEXT")
     private String descripcion;
 
@@ -47,6 +51,16 @@ public class Producto extends BaseEntity {
     @Builder.Default
     private BigDecimal precioVentaBase = BigDecimal.ZERO;
 
+    // --- NUEVO CAMPO: MARGEN (Análisis Funcional) ---
+    @Column(name = "margen_ganancia_sugerido", precision = 5, scale = 2)
+    @Builder.Default
+    private BigDecimal margenGananciaSugerido = new BigDecimal("30.00");
+
+    // --- NUEVO CAMPO V13: Stock reservado para producción/ventas ---
+    @Column(name = "stock_comprometido", precision = 15, scale = 2)
+    @Builder.Default
+    private BigDecimal stockComprometido = BigDecimal.ZERO;
+
     @Column(name = "fecha_creacion", nullable = false, updatable = false)
     @Builder.Default
     private LocalDateTime fechaCreacion = LocalDateTime.now();
@@ -54,4 +68,9 @@ public class Producto extends BaseEntity {
     @Column(nullable = false)
     @Builder.Default
     private boolean activo = true;
+
+        @Override
+        public String toString() {
+            return this.nombre;
+        }
 }

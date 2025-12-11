@@ -42,6 +42,6 @@ public class CategoriaCliente extends BaseEntity {
 
     @Override
     public String toString() {
-        return getDisplay();
+        return this.nombre;
     }
 }

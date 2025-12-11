@@ -1,15 +1,14 @@
 package com.unam.mvmsys.ui;
 
+import com.unam.mvmsys.MvmsysApplication;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
-import java.net.URL;
-
-import com.unam.mvmsys.MvmsysApplication;
 
 public class JavaFxApplication extends Application {
 
@@ -17,46 +16,34 @@ public class JavaFxApplication extends Application {
 
     @Override
     public void init() {
-        // Iniciamos Spring Boot antes de mostrar la ventana
         applicationContext = new SpringApplicationBuilder(MvmsysApplication.class).run();
     }
-    
-   @Override
+
+    @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+        // Cargar Main desde carpeta layout
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/layout/main.fxml"));
         loader.setControllerFactory(applicationContext::getBean);
         
-        javafx.scene.Parent root = loader.load();
+        Parent root = loader.load();
         Scene scene = new Scene(root);
         
-        // --- CARGA DE CSS (Ruta Ajustada) ---
-        // Buscamos dentro de la carpeta /fxml/
-        URL cssUrl = getClass().getResource("/fxml/styles.css");
+        // Cargar CSS
+        scene.getStylesheets().addAll(
+            getClass().getResource("/css/base.css").toExternalForm(),
+            getClass().getResource("/css/layout.css").toExternalForm(),
+            getClass().getResource("/css/components.css").toExternalForm(),
+            getClass().getResource("/css/tables.css").toExternalForm()
+        );
         
-        if (cssUrl != null) {
-            scene.getStylesheets().add(cssUrl.toExternalForm());
-        } else {
-            System.err.println("⚠️ ADVERTENCIA: No se encontró 'styles.css'.");
-            System.err.println("   Verifique que esté en: src/main/resources/fxml/styles.css");
-        }
-        // ------------------------------------
-
-        stage.setTitle("VMsys");
+        stage.setTitle("MVMsys - Gestión Integral");
         stage.setScene(scene);
         stage.setMaximized(true);
-        
-        // Configurar para cerrar todo el sistema al cerrar la ventana principal
-        stage.setOnCloseRequest(event -> {
-            Platform.exit();
-            System.exit(0);
-        });
-        
         stage.show();
     }
 
     @Override
     public void stop() {
-        // Cerramos el contexto de Spring limpiamente al salir
         applicationContext.close();
         Platform.exit();
     }

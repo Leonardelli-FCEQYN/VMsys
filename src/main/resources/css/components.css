@@ -1,0 +1,95 @@
+/* components.css */
+.btn-primary {
+    -fx-background-color: #991b1b;
+    -fx-text-fill: white;
+    -fx-font-weight: 700;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-padding: 8 20;
+}
+.btn-primary:hover { -fx-background-color: #7f1d1d; }
+
+.btn-secondary {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #374151;
+    -fx-font-weight: 600;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 6px;
+    -fx-padding: 8 20;
+}
+.btn-secondary:hover { -fx-background-color: #f9fafb; -fx-border-color: #9ca3af; }
+
+/* Botones de acción en tablas */
+.table-action {
+    -fx-min-width: 36px;
+    -fx-min-height: 36px;
+    -fx-max-width: 36px;
+    -fx-max-height: 36px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-background-color: #6b7280;
+    -fx-border-color: #6b7280;
+    -fx-text-fill: #f9fafb;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-font-family: "Segoe UI Symbol", "Segoe UI Emoji", "Segoe UI", sans-serif;
+    -fx-alignment: CENTER;
+    -fx-text-alignment: center;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+.table-action:hover { -fx-opacity: 0.9; }
+.table-action.danger {
+    -fx-background-color: #991b1b;
+    -fx-border-color: #991b1b;
+    -fx-text-fill: #fef2f2;
+}
+.table-action.success {
+    -fx-background-color: #15803d;
+    -fx-border-color: #15803d;
+    -fx-text-fill: #f0fdf4;
+}
+
+.text-field, .combo-box, .text-area {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10 12;
+    -fx-text-fill: #111827;
+}
+.text-field:focused, .combo-box:focused, .text-area:focused {
+    -fx-border-color: #d1d5db;
+    -fx-effect: none;
+}
+.combo-box .arrow-button { -fx-background-color: transparent; -fx-border-color: transparent; }
+.combo-box .arrow { -fx-background-color: #6b7280; }
+.search-field {
+    -fx-background-radius: 50px;
+    -fx-border-radius: 50px;
+    -fx-border-color: #e5e7eb;
+    -fx-background-color: #f9fafb;
+    -fx-padding: 8 15;
+}
+.search-field:focused {
+    -fx-border-color: #d1d5db;
+    -fx-background-color: #ffffff;
+}
+.label-form {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #4b5563;
+}
+/* Checkbox rojo */
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: #d1d5db;
+    -fx-border-radius: 3px;
+}
+.check-box:selected .mark {
+    -fx-background-color: white;
+}
+.check-box:selected .box {
+    -fx-background-color: #991b1b;
+    -fx-border-color: #991b1b;
+}

@@ -2,6 +2,7 @@ package com.unam.mvmsys.entidad.stock;
 
 import com.unam.mvmsys.entidad.base.BaseEntity;
 import com.unam.mvmsys.entidad.seguridad.Usuario;
+import com.unam.mvmsys.entidad.produccion.OrdenProduccion;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -47,5 +48,10 @@ public class MovimientoStock extends BaseEntity {
     @Column(name = "activo", nullable = false)
     @Builder.Default
     private boolean activo = true;
+
+    // --- NUEVO CAMPO V14 (Vinculación con Producción) ---
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "orden_produccion_id")
+    private OrdenProduccion ordenProduccion;
 }
 

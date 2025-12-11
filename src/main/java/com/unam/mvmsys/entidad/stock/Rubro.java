@@ -12,4 +12,9 @@ public class Rubro extends BaseEntity {
 
     @Column(nullable = false, unique = true, length = 100)
     private String nombre;
+
+    @Override
+    public String toString() {
+        return this.nombre;
+    }
 }

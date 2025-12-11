@@ -5,7 +5,7 @@ import com.unam.mvmsys.entidad.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity
+@Entity(name = "EtapaProcesoConfig")
 @Table(name = "etapas_proceso")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class EtapaProceso extends BaseEntity {

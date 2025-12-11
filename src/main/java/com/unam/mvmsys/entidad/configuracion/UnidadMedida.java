@@ -18,4 +18,13 @@ public class UnidadMedida extends BaseEntity {
 
     @Column(name = "permite_decimales", nullable = false)
     private boolean permiteDecimales;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean activo = true;
+
+    @Override
+    public String toString() {
+        return this.nombre;
+    }
 }

@@ -1,51 +1,73 @@
 package com.unam.mvmsys.entidad.produccion;
 
-import java.time.LocalDateTime;
-
 import com.unam.mvmsys.entidad.base.BaseEntity;
-import com.unam.mvmsys.entidad.configuracion.Estado;
-import com.unam.mvmsys.entidad.seguridad.Persona;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "ordenes_produccion")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor @Builder
 public class OrdenProduccion extends BaseEntity {
 
-    @Column(name = "codigo_orden", nullable = false, unique = true, length = 50)
-    private String codigoOrden;
+    @Column(nullable = false, unique = true, length = 50)
+    private String codigo;
 
-    @Column(name = "fecha_inicio")
-    private LocalDateTime fechaInicio;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "proceso_estandar_id", nullable = false)
+    private ProcesoEstandar procesoEstandar;
+
+    @Column(name = "cantidad_planificada", nullable = false, precision = 12, scale = 3)
+    private BigDecimal cantidadPlanificada;
+
+    @Column(name = "cantidad_real_obtenida", precision = 12, scale = 3)
+    @Builder.Default
+    private BigDecimal cantidadRealObtenida = BigDecimal.ZERO;
+
+    @Column(name = "fecha_emision", nullable = false)
+    @Builder.Default
+    private LocalDateTime fechaEmision = LocalDateTime.now();
+
+    @Column(name = "fecha_inicio_estimada")
+    private LocalDateTime fechaInicioEstimada;
 
     @Column(name = "fecha_fin_estimada")
     private LocalDateTime fechaFinEstimada;
 
+    @Column(name = "fecha_inicio_real")
+    private LocalDateTime fechaInicioReal;
+
     @Column(name = "fecha_fin_real")
     private LocalDateTime fechaFinReal;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "estado_id", nullable = false)
-    private Estado estado;
-
-    @Column(length = 20)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
     @Builder.Default
-    private String prioridad = "NORMAL";
+    private EstadoOrden estado = EstadoOrden.PLANIFICADA;
 
-    @ManyToOne
-    @JoinColumn(name = "responsable_id")
-    private Persona responsable;
+    @Column(length = 10)
+    @Builder.Default
+    private String prioridad = "MEDIA"; 
 
     @Column(columnDefinition = "TEXT")
     private String observaciones;
+
+    // Seguimiento de ejecución
+    @OneToMany(mappedBy = "ordenProduccion", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("fechaInicio ASC")
+    @Builder.Default
+    private List<OrdenProduccionEtapa> etapasSeguimiento = new ArrayList<>();
+
+    // Reservas de stock asociadas
+    @OneToMany(mappedBy = "ordenProduccion", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ReservaStockProduccion> reservas = new ArrayList<>();
+
+    public enum EstadoOrden {
+        PLANIFICADA, EN_PROCESO, PAUSADA, FINALIZADA, CANCELADA
+    }
 }

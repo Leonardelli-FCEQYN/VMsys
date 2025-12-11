@@ -4,7 +4,8 @@
 spring:
   application:
     name: vmsys
-
+  profiles:
+    active: offline
 vmsys:
   precio-compra:
     estrategia: ULTIMA_COMPRA  # Opciones: ULTIMA_COMPRA | PROMEDIO_PROVEEDORES | MAS_FRECUENTE
@@ -41,7 +42,6 @@ spring:
       on-profile: online
   
   datasource:
-    # Ajusta aquí la IP, puerto y nombre de tu base de datos real
     url: jdbc:postgresql://localhost:5432/mvm_db_prod
     username: postgres
     password: tu_password_remoto
@@ -49,6 +49,9 @@ spring:
   
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    locations: ["classpath:db/migration/common", "classpath:db/migration/postgresql"]
 
 # ==============================================================
 # PERFIL 2: OFFLINE (Contingencia - H2 en Disco Local)
@@ -58,13 +61,16 @@ spring:
   config:
     activate:
       on-profile: offline
-  
+
   datasource:
-    # Esto guardará la BD en una carpeta 'data' dentro de tu proyecto
-    url: jdbc:h2:file:./data/offline_db;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE
+    url: jdbc:h2:file:./data/offline_db;DB_CLOSE_DELAY=-1;AUTO_SERVER=TRUE;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
     username: sa
     password: password
     driver-class-name: org.h2.Driver
-  
+
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+
+  flyway:
+    fail-on-missing-locations: true
+    locations: ["classpath:db/migration/common", "classpath:db/migration/h2"]

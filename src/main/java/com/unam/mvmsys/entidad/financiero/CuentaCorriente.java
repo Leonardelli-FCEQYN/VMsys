@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class CuentaCorriente extends BaseEntity {
 
-    // Relación 1 a 1: Una persona tiene una única cuenta corriente
     @OneToOne(optional = false)
     @JoinColumn(name = "persona_id", unique = true, nullable = false)
     private Persona persona;
@@ -21,6 +20,11 @@ public class CuentaCorriente extends BaseEntity {
     @Column(name = "saldo_actual", nullable = false, precision = 15, scale = 2)
     @Builder.Default
     private BigDecimal saldoActual = BigDecimal.ZERO;
+
+    // --- NUEVO CAMPO: LÍMITE DE CRÉDITO ---
+    @Column(name = "limite_credito", precision = 15, scale = 2)
+    @Builder.Default
+    private BigDecimal limiteCredito = BigDecimal.ZERO;
 
     @Column(name = "fecha_ultimo_movimiento")
     private LocalDateTime fechaUltimoMovimiento;

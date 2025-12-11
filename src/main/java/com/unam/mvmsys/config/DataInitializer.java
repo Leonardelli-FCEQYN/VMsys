@@ -1,13 +1,18 @@
 package com.unam.mvmsys.config;
 
 import com.unam.mvmsys.entidad.configuracion.*;
-import com.unam.mvmsys.entidad.seguridad.RolUsuario;
+import com.unam.mvmsys.entidad.produccion.EtapaProceso;
+import com.unam.mvmsys.entidad.produccion.ProcesoEstandar;
+import com.unam.mvmsys.entidad.produccion.ProcesoEstandarInsumo;
 import com.unam.mvmsys.entidad.seguridad.Persona;
+import com.unam.mvmsys.entidad.seguridad.RolUsuario;
 import com.unam.mvmsys.entidad.stock.Producto;
 import com.unam.mvmsys.entidad.stock.Rubro;
 import com.unam.mvmsys.repositorio.configuracion.*;
-import com.unam.mvmsys.repositorio.seguridad.RolUsuarioRepository;
+import com.unam.mvmsys.repositorio.produccion.ProcesoEstandarRepository;
 import com.unam.mvmsys.repositorio.seguridad.PersonaRepository;
+import com.unam.mvmsys.repositorio.seguridad.RolUsuarioRepository;
+import com.unam.mvmsys.repositorio.stock.ProductoRepository;
 import com.unam.mvmsys.repositorio.stock.RubroRepository;
 import com.unam.mvmsys.servicio.stock.ProductoService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +22,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
@@ -31,6 +38,8 @@ public class DataInitializer {
     private final RolUsuarioRepository rolRepo;
     private final PersonaRepository personaRepo;
     private final RubroRepository rubroRepo;
+    private final ProductoRepository productoRepo;
+    private final ProcesoEstandarRepository procesoRepo;
 
     // Servicios de Negocio (Para crear datos transaccionales)
     private final ProductoService productoService;
@@ -201,6 +210,10 @@ public class DataInitializer {
             crearProductoSiNoExiste("PRO-009", "Mesa de Luz Moderna", "Mesa de noche con cajón y estante", unidadUn, tipoTerminado, new BigDecimal("8"), new BigDecimal("3800.00"), new BigDecimal("6200.00"));
             crearProductoSiNoExiste("PRO-010", "Rack TV Laqueado 120cm", "Mueble para TV con estantes laterales", unidadUn, tipoTerminado, new BigDecimal("5"), new BigDecimal("8900.00"), new BigDecimal("13500.00"));
 
+            // 8. Recetas de Producción
+            System.out.println("📋 [DataInitializer] Creando recetas de producción...");
+            crearRecetasDeProduccion();
+
             System.out.println("✅ [DataInitializer] Datos maestros cargados correctamente.");
             System.out.println("🚀 [DataInitializer] Sistema listo y cargado.");
         };
@@ -334,4 +347,224 @@ public class DataInitializer {
             CategoriaCliente saved = categoriaClienteRepo.save(categoria);
         }
     }
+
+            private void crearRecetasDeProduccion() {
+            // Receta 1: Mesa Comedor Cedro 180x90
+            crearRecetaSiNoExiste(
+                "Mesa Comedor Cedro 180x90",
+                "Proceso completo de fabricación de mesa de comedor en cedro con acabado natural",
+                List.of(
+                    new InsumoData("MAD-004", new BigDecimal("2.5")),
+                    new InsumoData("INS-002", new BigDecimal("0.5")),
+                    new InsumoData("INS-004", new BigDecimal("0.8")),
+                    new InsumoData("INS-001", new BigDecimal("5"))
+                ),
+                List.of(
+                    new EtapaData(1, "Corte y dimensionado de tablones", "Cortar tablones de cedro a medidas exactas", 120),
+                    new EtapaData(2, "Cepillado y lijado inicial", "Cepillar y lijar para eliminar asperezas", 90),
+                    new EtapaData(3, "Ensamblado de tablero", "Unir tablones con cola y prensas", 180),
+                    new EtapaData(4, "Construcción de estructura y patas", "Fabricar estructura portante y patas", 240),
+                    new EtapaData(5, "Lijado fino y preparación superficie", "Lijar fino y preparar para acabado", 150),
+                    new EtapaData(6, "Aplicación de sellador", "Aplicar sellador para cerrar poros", 60),
+                    new EtapaData(7, "Aplicación de barniz (3 manos)", "Barnizar en 3 capas con lija entre manos", 360),
+                    new EtapaData(8, "Pulido final y control de calidad", "Pulido espejo y control de calidad", 90)
+                )
+            );
+
+            // Receta 2: Puerta Madera Pino Tablero
+            crearRecetaSiNoExiste(
+                "Puerta Madera Pino Tablero 70x200",
+                "Fabricación de puerta placa con marco de pino y tablero central",
+                List.of(
+                    new InsumoData("MAD-001", new BigDecimal("1.8")),
+                    new InsumoData("SEL-003", new BigDecimal("1.5")),
+                    new InsumoData("INS-002", new BigDecimal("0.3")),
+                    new InsumoData("INS-005", new BigDecimal("0.5")),
+                    new InsumoData("INS-001", new BigDecimal("3"))
+                ),
+                List.of(
+                    new EtapaData(1, "Corte de marco perimetral", "Cortar perimetral de pino según medidas", 45),
+                    new EtapaData(2, "Armado de bastidor", "Armar bastidor con escuadras", 90),
+                    new EtapaData(3, "Corte y ajuste de tablero central", "Cortar y ajustar tablero central", 60),
+                    new EtapaData(4, "Encolado y prensado", "Encolar y prensar conjunto", 180),
+                    new EtapaData(5, "Lijado y preparación", "Lijar y preparar superficie", 75),
+                    new EtapaData(6, "Aplicación de sellador y acabado", "Aplicar sellador y acabado", 120),
+                    new EtapaData(7, "Control de calidad final", "Inspección final de calidad", 30)
+                )
+            );
+
+            // Receta 3: Escritorio con Cajonera
+            crearRecetaSiNoExiste(
+                "Escritorio Madera Pino 1.40x60",
+                "Fabricación de escritorio completo con cajonera lateral y estante",
+                List.of(
+                    new InsumoData("MAD-001", new BigDecimal("3.0")),
+                    new InsumoData("SEL-003", new BigDecimal("1.2")),
+                    new InsumoData("INS-002", new BigDecimal("0.4")),
+                    new InsumoData("INS-004", new BigDecimal("0.6")),
+                    new InsumoData("INS-001", new BigDecimal("4"))
+                ),
+                List.of(
+                    new EtapaData(1, "Corte de componentes principales", "Cortar tablero, laterales y frente", 90),
+                    new EtapaData(2, "Fabricación de cajones", "Fabricar 3 cajones con guías", 150),
+                    new EtapaData(3, "Construcción de estructura y patas", "Construir estructura base y patas", 120),
+                    new EtapaData(4, "Ensamblado de tapa y estructura", "Ensamblar tapa con estructura", 180),
+                    new EtapaData(5, "Instalación de guías y herrajes", "Instalar guías de cajones y cerraduras", 90),
+                    new EtapaData(6, "Lijado completo", "Lijar todo el conjunto", 120),
+                    new EtapaData(7, "Aplicación de acabado", "Aplicar acabado y barniz", 240),
+                    new EtapaData(8, "Montaje final y ajustes", "Montaje final y ajustes", 60)
+                )
+            );
+
+            // Receta 4: Biblioteca Modular
+            crearRecetaSiNoExiste(
+                "Biblioteca Modular 2 Cuerpos",
+                "Sistema de biblioteca con estantes ajustables y respaldo",
+                List.of(
+                    new InsumoData("MAD-001", new BigDecimal("4.5")),
+                    new InsumoData("SEL-007", new BigDecimal("2.0")),
+                    new InsumoData("INS-002", new BigDecimal("0.3")),
+                    new InsumoData("INS-006", new BigDecimal("0.7"))
+                ),
+                List.of(
+                    new EtapaData(1, "Corte de paneles laterales y estantes", "Cortar paneles laterales y 5 estantes", 120),
+                    new EtapaData(2, "Perforado para tarugos regulables", "Perforar para tarugos de regulación", 90),
+                    new EtapaData(3, "Armado de estructura principal", "Armar estructura con cola y escuadras", 150),
+                    new EtapaData(4, "Instalación de respaldo y zócalo", "Instalar respaldo y zócalo", 120),
+                    new EtapaData(5, "Lijado y preparación", "Lijar y preparar para laqueado", 90),
+                    new EtapaData(6, "Laqueado y acabado", "Laquear en múltiples capas", 300),
+                    new EtapaData(7, "Montaje final de accesorios", "Montar accesorios y control final", 60)
+                )
+            );
+
+            // Receta 5: Ropero 3 Puertas
+            crearRecetaSiNoExiste(
+                "Ropero 3 Puertas Pino",
+                "Placard de 220cm de alto con cajonera inferior y barral",
+                List.of(
+                    new InsumoData("MAD-001", new BigDecimal("6.0")),
+                    new InsumoData("SEL-007", new BigDecimal("3.5")),
+                    new InsumoData("INS-002", new BigDecimal("0.6")),
+                    new InsumoData("INS-004", new BigDecimal("1.2")),
+                    new InsumoData("INS-001", new BigDecimal("6"))
+                ),
+                List.of(
+                    new EtapaData(1, "Corte de paneles y estructura", "Cortar laterales, techo y base", 180),
+                    new EtapaData(2, "Fabricación de puertas", "Fabricar 3 puertas con bisagras", 240),
+                    new EtapaData(3, "Construcción de cajones", "Construir cajonera inferior", 180),
+                    new EtapaData(4, "Armado del cuerpo principal", "Armar cuerpo principal", 300),
+                    new EtapaData(5, "Instalación de herrajes y bisagras", "Instalar bisagras y cerraduras", 120),
+                    new EtapaData(6, "Lijado completo", "Lijar conjunto completo", 180),
+                    new EtapaData(7, "Aplicación de acabado", "Aplicar acabado final 3 manos", 420),
+                    new EtapaData(8, "Montaje de puertas y ajustes", "Montar puertas y hacer ajustes", 120),
+                    new EtapaData(9, "Control de calidad y packaging", "Control final y empaque", 60)
+                )
+            );
+
+            // Receta 6: Silla Comedor Tapizada
+            crearRecetaSiNoExiste(
+                "Silla Comedor Tapizada",
+                "Silla con estructura de madera y asiento/respaldo tapizado",
+                List.of(
+                    new InsumoData("MAD-003", new BigDecimal("0.5")),
+                    new InsumoData("INS-002", new BigDecimal("0.1")),
+                    new InsumoData("INS-004", new BigDecimal("0.2"))
+                ),
+                List.of(
+                    new EtapaData(1, "Corte de patas y travesaños", "Cortar madera maciza para patas", 45),
+                    new EtapaData(2, "Torneado de patas", "Tornear patas decorativas", 90),
+                    new EtapaData(3, "Ensamblado de estructura", "Ensamblar estructura de silla", 120),
+                    new EtapaData(4, "Fabricación de asiento y respaldo", "Armar asiento y respaldo", 90),
+                    new EtapaData(5, "Lijado y acabado de madera", "Lijar y preparar madera", 150),
+                    new EtapaData(6, "Tapizado de asiento y respaldo", "Tapizar con tela y relleno", 120),
+                    new EtapaData(7, "Montaje final", "Montaje y control final", 45)
+                )
+            );
+
+            // Receta 7: Cama Plaza y Media
+            crearRecetaSiNoExiste(
+                "Cama Plaza y Media con Respaldo",
+                "Cama de 1.40m con cabecera tallada y largueros reforzados",
+                List.of(
+                    new InsumoData("MAD-004", new BigDecimal("2.0")),
+                    new InsumoData("MAD-001", new BigDecimal("2.5")),
+                    new InsumoData("INS-002", new BigDecimal("0.4")),
+                    new InsumoData("INS-004", new BigDecimal("0.8"))
+                ),
+                List.of(
+                    new EtapaData(1, "Corte de largueros y travesaños", "Cortar largueros principales", 90),
+                    new EtapaData(2, "Tallado de cabecera decorativa", "Tallar cabecera con motivos", 300),
+                    new EtapaData(3, "Armado de estructura base", "Armar estructura base", 180),
+                    new EtapaData(4, "Instalación de cabecera", "Instalar cabecera al marco", 120),
+                    new EtapaData(5, "Refuerzo de uniones", "Reforzar uniones internas", 90),
+                    new EtapaData(6, "Lijado completo", "Lijar todo el conjunto", 150),
+                    new EtapaData(7, "Aplicación de acabado", "Aplicar barniz/cedro natural", 300),
+                    new EtapaData(8, "Inspección y control final", "Inspección de calidad", 60)
+                )
+            );
+
+        // Receta 8: Rack TV Laqueado
+        crearRecetaSiNoExiste(
+            "Rack TV Laqueado 120cm",
+            "Mueble para TV con estantes laterales y acabado laqueado",
+            List.of(
+                new InsumoData("SEL-003", new BigDecimal("2.5")),
+                new InsumoData("INS-002", new BigDecimal("0.3")),
+                new InsumoData("INS-006", new BigDecimal("1.0")),
+                new InsumoData("INS-008", new BigDecimal("0.5"))
+            ),
+            List.of(
+                new EtapaData(1, "Corte de paneles CNC", "Corte preciso con CNC", 60),
+                new EtapaData(2, "Ensamblado de estructura", "Ensamblar estructura principal", 120),
+                new EtapaData(3, "Aplicación de masilla en bordes", "Aplicar masilla de poliuretano", 90),
+                new EtapaData(4, "Lijado fino", "Lijar todo con grano fino", 120),
+                new EtapaData(5, "Aplicación de fondos y masilla", "Aplicar fondo y masilla blanca", 180),
+                new EtapaData(6, "Laqueado (3 manos)", "Laquear 3 capas espejo", 360),
+                new EtapaData(7, "Pulido espejo", "Pulido final espejo", 150),
+                new EtapaData(8, "Montaje de herrajes y accesorios", "Montaje de herrajes finales", 60)
+            )
+        );
+    }
+
+    private void crearRecetaSiNoExiste(String nombre, String descripcion,
+                                       List<InsumoData> insumos, List<EtapaData> etapas) {
+        if (!procesoRepo.existsByNombreIgnoreCase(nombre)) {
+            ProcesoEstandar receta = new ProcesoEstandar();
+            receta.setNombre(nombre);
+            receta.setDescripcion(descripcion);
+            receta.setActivo(true);
+
+            List<ProcesoEstandarInsumo> insumosReceta = new ArrayList<>();
+            for (InsumoData data : insumos) {
+                productoRepo.findByCodigoSku(data.sku()).ifPresent(producto -> {
+                    ProcesoEstandarInsumo insumo = new ProcesoEstandarInsumo();
+                    insumo.setProcesoEstandar(receta);
+                    insumo.setProducto(producto);
+                    insumo.setCantidadBase(data.cantidad());
+                    insumosReceta.add(insumo);
+                });
+            }
+            receta.setInsumos(insumosReceta);
+
+            List<EtapaProceso> etapasProduccion = new ArrayList<>();
+            int tiempoTotal = 0;
+            for (EtapaData data : etapas) {
+                EtapaProceso etapa = new EtapaProceso();
+                etapa.setProcesoEstandar(receta);
+                etapa.setOrdenSecuencia(data.orden());
+                etapa.setNombre(data.nombre());
+                etapa.setDescripcion(data.descripcion());
+                etapa.setTiempoEstimadoMinutos(data.tiempoMinutos());
+                etapasProduccion.add(etapa);
+                tiempoTotal += data.tiempoMinutos();
+            }
+            receta.setEtapas(etapasProduccion);
+            receta.setTiempoEstimadoMinutos(tiempoTotal);
+
+            procesoRepo.save(receta);
+        }
+    }
+
+    private record InsumoData(String sku, BigDecimal cantidad) { }
+    private record EtapaData(int orden, String nombre, String descripcion, int tiempoMinutos) { }
 }

@@ -1,0 +1,57 @@
+/* tables.css */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 0;
+}
+.table-view .column-header-background {
+    -fx-background-color: #ffffff;
+    -fx-border-color: transparent transparent #e5e7eb transparent;
+    -fx-border-width: 2px;
+}
+.table-view .column-header .label {
+    -fx-text-fill: #6b7280;
+    -fx-font-weight: 700;
+    -fx-font-size: 12px;
+}
+.table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #f3f4f6;
+    -fx-background-insets: 0;
+}
+.table-cell {
+    -fx-text-fill: #374151;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 8 10;
+    -fx-border-width: 0; /* Sin líneas verticales */
+}
+/* Selección */
+.table-view:focused .table-row-cell:selected {
+    -fx-background-color: #fef2f2;
+    -fx-background-insets: 0;
+}
+.table-view:focused .table-row-cell:selected .table-cell {
+    -fx-text-fill: #991b1b;
+    -fx-font-weight: bold;
+}
+.table-view .table-row-cell:selected {
+     -fx-background-color: #f9fafb;
+}
+/* Resaltado para checks */
+.table-row-cell:highlighted {
+    -fx-background-color: #fff1f2;
+    -fx-background-insets: 0;
+}
+.table-row-cell:highlighted .table-cell {
+    -fx-text-fill: #881337;
+}
+/* Scrollbars */
+.table-view .virtual-flow .scroll-bar:vertical,
+.table-view .virtual-flow .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+.table-view .virtual-flow .scroll-bar .thumb {
+    -fx-background-color: #d1d5db;
+    -fx-background-radius: 10px;
+}

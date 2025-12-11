@@ -1,0 +1,7 @@
+/* base.css */
+.root {
+    -fx-font-family: "Segoe UI", "Roboto", "Helvetica", sans-serif;
+    -fx-font-size: 14px;
+    -fx-background-color: #f3f4f6;
+    -fx-text-fill: #1f2937;
+}

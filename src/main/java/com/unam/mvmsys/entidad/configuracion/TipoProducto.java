@@ -14,4 +14,13 @@ public class TipoProducto extends BaseEntity {
     private String nombre;
 
     private String descripcion;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private boolean activo = true;
+
+    @Override
+    public String toString() {
+        return this.nombre;
+    }
 }
